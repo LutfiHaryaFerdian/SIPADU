@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Facades\DB;
+    use Carbon\Carbon;
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,12 +17,31 @@
 
     <main class="p-8">
         <h2 class="text-2xl mb-4">Selamat Datang, {{ session('admin')->nama }}</h2>
-        <p class="text-gray-600">Anda dapat mengelola aduan mahasiswa di sini.</p>
 
-        <div class="mt-8 bg-white p-6 rounded-lg shadow">
-            <h3 class="text-lg font-bold mb-2">Statistik Pengaduan</h3>
-            <p>Belum ada data (contoh placeholder).</p>
+        <div class="grid grid-cols-3 gap-4 mb-8">
+            @php
+                $totalMenunggu = DB::table('aduan')->where('status', 'Menunggu')->count();
+                $totalDiproses = DB::table('aduan')->where('status', 'Diproses')->count();
+                $totalSelesai = DB::table('aduan')->where('status', 'Selesai')->count();
+            @endphp
+
+            <div class="bg-yellow-100 p-4 rounded-lg text-center">
+                <h3 class="text-lg font-bold">Menunggu</h3>
+                <p class="text-2xl font-bold text-yellow-700">{{ $totalMenunggu }}</p>
+            </div>
+            <div class="bg-blue-100 p-4 rounded-lg text-center">
+                <h3 class="text-lg font-bold">Diproses</h3>
+                <p class="text-2xl font-bold text-blue-700">{{ $totalDiproses }}</p>
+            </div>
+            <div class="bg-green-100 p-4 rounded-lg text-center">
+                <h3 class="text-lg font-bold">Selesai</h3>
+                <p class="text-2xl font-bold text-green-700">{{ $totalSelesai }}</p>
+            </div>
         </div>
+
+        <a href="{{ route('admin.dashboard') }}" class="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800">
+            Kelola Aduan
+        </a>
     </main>
 </body>
 </html>
