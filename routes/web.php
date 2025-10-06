@@ -1,35 +1,22 @@
 <?php
 
+use App\Http\Controllers\MultiAuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AduanController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\PicController;
 
+// Halaman login untuk masing-masing role
+Route::get('/login/{role}', [MultiAuthController::class, 'showLogin'])->name('login.role');
+Route::post('/login/{role}', [MultiAuthController::class, 'login'])->name('login.process');
+Route::get('/logout/{role}', [MultiAuthController::class, 'logout'])->name('logout.role');
 
-// ===== Autentikasi =====
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// ===== Dashboard per Role =====
+// Middleware per role
 Route::middleware('admin')->group(function () {
-    Route::get('/admin/dashboard', [DashboardController::class, 'admin']);
-    Route::get('/admin/aduan', [AdminController::class, 'index']);
-    Route::post('/admin/aduan/{id}/verifikasi', [AdminController::class, 'verifikasi']);
-    Route::post('/admin/aduan/{id}/assign', [AdminController::class, 'assign']);
+    Route::get('/admin/dashboard', fn() => view('dashboard.admin'));
 });
 
 Route::middleware('mahasiswa')->group(function () {
-    Route::get('/mahasiswa/dashboard', [DashboardController::class, 'mahasiswa'])->name('dashboard.mahasiswa');
-    Route::get('/mahasiswa/aduan', [AduanController::class, 'index'])->name('aduan.index');
-    Route::get('/mahasiswa/aduan/create', [AduanController::class, 'create']);
-    Route::post('/mahasiswa/aduan/store', [AduanController::class, 'store']);
+    Route::get('/mahasiswa/dashboard', fn() => view('dashboard.mahasiswa'));
 });
 
 Route::middleware('pic')->group(function () {
-    Route::get('/pic/dashboard', [DashboardController::class, 'pic']);
-    Route::get('/pic/tindaklanjut', [PicController::class, 'index']);
-    Route::post('/pic/tindaklanjut/store', [PicController::class, 'tindakLanjut']);
+    Route::get('/pic/dashboard', fn() => view('dashboard.pic'));
 });

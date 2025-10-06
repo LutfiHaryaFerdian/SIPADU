@@ -1,42 +1,24 @@
-@extends('layout.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Mahasiswa - SIPADU</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-green-600 text-white p-4 flex justify-between">
+        <h1 class="text-xl font-semibold">Dashboard Mahasiswa</h1>
+        <a href="/logout/mahasiswa" class="hover:underline">Logout</a>
+    </nav>
 
-@section('content')
-<h2 class="text-2xl font-bold mb-4">
-    Halo, {{ session('data')->nama ?? 'Mahasiswa' }}
-</h2>
-<p class="mb-6 text-gray-700">Selamat datang di Sistem Pengaduan Mahasiswa (SIPADU).</p>
+    <main class="p-8">
+        <h2 class="text-2xl mb-4">Selamat Datang, {{ session('mahasiswa')->nama }}</h2>
+        <p class="text-gray-600">Gunakan menu di bawah untuk mengirim atau melihat status aduan Anda.</p>
 
-<div class="flex justify-between mb-4">
-    <h3 class="text-xl font-semibold">Daftar Aduan</h3>
-    <a href="/mahasiswa/aduan/create" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Buat Aduan</a>
-</div>
-
-@if(session('success'))
-    <div class="bg-green-100 text-green-700 p-3 rounded mb-3">{{ session('success') }}</div>
-@endif
-
-<table class="w-full border border-gray-300 bg-white rounded shadow">
-    <thead class="bg-blue-700 text-white">
-        <tr>
-            <th class="p-2">Nomor Tiket</th>
-            <th class="p-2">Judul</th>
-            <th class="p-2">Kategori</th>
-            <th class="p-2">Status</th>
-        </tr>
-    </thead>
-    <tbody>
-    @forelse($aduan as $a)
-        <tr class="border-b hover:bg-gray-50">
-            <td class="p-2">{{ $a->nomor_tiket }}</td>
-            <td class="p-2">{{ $a->judul }}</td>
-            <td class="p-2">{{ $a->kategori }}</td>
-            <td class="p-2">{{ $a->status }}</td>
-        </tr>
-    @empty
-        <tr>
-            <td colspan="4" class="text-center text-gray-500 p-3">Belum ada aduan.</td>
-        </tr>
-    @endforelse
-</tbody>
-</table>
-@endsection
+        <div class="mt-8 bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-bold mb-2">Aduan Terbaru</h3>
+            <p>Belum ada data (contoh placeholder).</p>
+        </div>
+    </main>
+</body>
+</html>

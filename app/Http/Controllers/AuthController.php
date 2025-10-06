@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// HAPUS DB DAN HASH, GUNAKAN Auth
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -15,45 +15,35 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $credentials = $request->only('email', 'password');
 
-        // Coba login sebagai Admin
-        if (Auth::guard('admin')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/admin/dashboard');
+        // Cek sebagai Admin
+        $admin = DB::table('admin')->where('email', $credentials['email'])->first();
+        if ($admin && Hash::check($credentials['password'], $admin->password)) {
+            session(['admin' => $admin]);
+            return redirect('/admin/dashboard');
         }
 
-        // Coba login sebagai Mahasiswa
-        if (Auth::guard('mahasiswa')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/mahasiswa/dashboard');
+        // Cek sebagai Mahasiswa
+        $mahasiswa = DB::table('mahasiswa')->where('email', $credentials['email'])->first();
+        if ($mahasiswa && Hash::check($credentials['password'], $mahasiswa->password)) {
+            session(['mahasiswa' => $mahasiswa]);
+            return redirect('/mahasiswa/dashboard');
         }
 
-        // Coba login sebagai PIC
-        if (Auth::guard('pic')->attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('/pic/dashboard');
+        // Cek sebagai PIC
+        $pic = DB::table('pic_units')->where('email', $credentials['email'])->first();
+        if ($pic && Hash::check($credentials['password'], $pic->password)) {
+            session(['pic' => $pic]);
+            return redirect('/pic/dashboard');
         }
 
-        return back()->withErrors([
-            'email' => 'Email atau password yang diberikan tidak cocok.',
-        ])->onlyInput('email');
+        return back()->with('error', 'Email atau password salah.');
     }
 
     public function logout(Request $request)
     {
-        // Logout dari semua guard yang mungkin aktif
-        Auth::guard('web')->logout();
-        Auth::guard('admin')->logout();
-        Auth::guard('mahasiswa')->logout();
-        Auth::guard('pic')->logout();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
+        $request->session()->flush();
         return redirect('/login');
     }
 }

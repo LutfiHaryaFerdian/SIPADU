@@ -1,35 +1,24 @@
-@extends('layout.app')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Admin - SIPADU</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-blue-700 text-white p-4 flex justify-between">
+        <h1 class="text-xl font-semibold">Dashboard Admin</h1>
+        <a href="/logout/admin" class="hover:underline">Logout</a>
+    </nav>
 
-@section('content')
-<h2 class="text-2xl font-bold mb-6">Dashboard Admin</h2>
+    <main class="p-8">
+        <h2 class="text-2xl mb-4">Selamat Datang, {{ session('admin')->nama }}</h2>
+        <p class="text-gray-600">Anda dapat mengelola aduan mahasiswa di sini.</p>
 
-@if(session('success'))
-    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">{{ session('success') }}</div>
-@endif
-
-<table class="w-full border border-gray-300 bg-white rounded shadow">
-    <thead class="bg-blue-700 text-white">
-        <tr>
-            <th class="p-2">Nomor Tiket</th>
-            <th class="p-2">Judul</th>
-            <th class="p-2">Status</th>
-            <th class="p-2">Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($aduan as $a)
-        <tr class="border-b hover:bg-gray-50">
-            <td class="p-2">{{ $a->nomor_tiket }}</td>
-            <td class="p-2">{{ $a->judul }}</td>
-            <td class="p-2">{{ $a->status }}</td>
-            <td class="p-2">
-                <form method="POST" action="/admin/aduan/{{ $a->id }}/verifikasi">
-                    @csrf
-                    <button class="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700">Verifikasi</button>
-                </form>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
-@endsection
+        <div class="mt-8 bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-bold mb-2">Statistik Pengaduan</h3>
+            <p>Belum ada data (contoh placeholder).</p>
+        </div>
+    </main>
+</body>
+</html>
