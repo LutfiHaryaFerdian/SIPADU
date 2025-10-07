@@ -8,8 +8,27 @@ use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
-    // 🧠 Menampilkan semua aduan
+    // 📊 Dashboard Admin
     public function index()
+    {
+        // Hitung statistik aduan
+        $totalAduan = DB::table('aduan')->count();
+        $aduanProses = DB::table('aduan')->where('status', 'Diproses')->count();
+        $aduanSelesai = DB::table('aduan')->where('status', 'Selesai')->count();
+
+        // Ambil 5 aduan terbaru
+        $aduanTerbaru = DB::table('aduan')
+            ->join('mahasiswa', 'aduan.id_mahasiswa', '=', 'mahasiswa.id')
+            ->select('aduan.*', 'mahasiswa.nama as nama_mahasiswa')
+            ->orderByDesc('aduan.created_at')
+            ->limit(5)
+            ->get();
+
+        return view('dashboard.admin', compact('totalAduan', 'aduanProses', 'aduanSelesai', 'aduanTerbaru'));
+    }
+
+    // 🧠 Menampilkan semua aduan
+    public function indexAduan()
     {
         $aduan = DB::table('aduan')
             ->leftJoin('mahasiswa', 'aduan.id_mahasiswa', '=', 'mahasiswa.id')

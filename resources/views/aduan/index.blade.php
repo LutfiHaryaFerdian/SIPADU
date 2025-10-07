@@ -1,4 +1,4 @@
-@extends('layout.base')
+@extends('layouts.mahasiswa')
 
 @section('title', 'Daftar Aduan Saya')
 

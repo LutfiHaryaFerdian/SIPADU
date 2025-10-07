@@ -1,57 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Manajemen Aduan - Admin SIPADU</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50">
+@extends('layouts.admin')
 
-    <!-- Navbar -->
-    <nav class="bg-blue-700 text-white p-4 flex justify-between">
-        <h1 class="text-xl font-semibold">Dashboard Admin - SIPADU</h1>
-        <a href="/logout/admin" class="hover:underline">Logout</a>
-    </nav>
+@section('title', 'Manajemen Aduan')
 
-    <!-- Content -->
-    <main class="p-8">
-        <h2 class="text-2xl mb-6 font-bold">Daftar Aduan Mahasiswa</h2>
+@section('content')
+<h2 class="text-2xl font-bold mb-6 text-gray-800">Daftar Aduan Mahasiswa</h2>
 
-        @if(session('success'))
-            <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
+@if(session('success'))
+    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
+        {{ session('success') }}
+    </div>
+@endif
 
-        @if(session('error'))
-            <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-                {{ session('error') }}
-            </div>
-        @endif
+@if(session('error'))
+    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+        {{ session('error') }}
+    </div>
+@endif
 
-        <table class="w-full border text-sm">
-            <thead class="bg-blue-100">
+@if($aduan->isEmpty())
+    <p class="text-gray-500 italic">Belum ada aduan mahasiswa.</p>
+@else
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+        <table class="min-w-full text-sm border-collapse">
+            <thead class="bg-blue-100 text-blue-800">
                 <tr>
-                    <th class="border p-2">Judul</th>
-                    <th class="border p-2">Mahasiswa</th>
-                    <th class="border p-2">Kategori</th>
-                    <th class="border p-2">Status</th>
-                    <th class="border p-2">Nomor Tiket</th>
-                    <th class="border p-2">Aksi</th>
+                    <th class="p-3 border text-left">Judul</th>
+                    <th class="p-3 border text-left">Mahasiswa</th>
+                    <th class="p-3 border text-left">Kategori</th>
+                    <th class="p-3 border text-left">Status</th>
+                    <th class="p-3 border text-left">Nomor Tiket</th>
+                    <th class="p-3 border text-center w-40">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($aduan as $a)
-                    <tr class="border-t">
-                        <td class="border p-2">{{ $a->judul }}</td>
-                        <td class="border p-2">
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="p-3">{{ $a->judul }}</td>
+                        <td class="p-3">
                             {{ $a->nama_mahasiswa }}<br>
                             <span class="text-xs text-gray-500">({{ $a->npm }})</span>
                         </td>
-                        <td class="border p-2">{{ $a->kategori }}</td>
-                        <td class="border p-2">{{ $a->status }}</td>
-                        <td class="border p-2">{{ $a->nomor_tiket }}</td>
-                        <td class="border p-2">
+                        <td class="p-3">{{ $a->kategori }}</td>
+                        <td class="p-3">
+                            @if($a->status === 'Menunggu')
+                                <span class="text-yellow-600 font-semibold">Menunggu</span>
+                            @elseif($a->status === 'Diproses')
+                                <span class="text-blue-600 font-semibold">Diproses</span>
+                            @else
+                                <span class="text-green-600 font-semibold">Selesai</span>
+                            @endif
+                        </td>
+                        <td class="p-3 font-mono">{{ $a->nomor_tiket }}</td>
+                        <td class="p-3 text-center">
                             @if($a->status === 'Menunggu')
                                 <form action="{{ route('admin.aduan.assign', $a->id) }}" method="POST" class="mb-2">
                                     @csrf
@@ -62,7 +62,7 @@
                                         @endforeach
                                     </select>
                                     <textarea name="catatan" placeholder="Catatan (opsional)" class="border rounded p-1 w-full text-sm mb-1"></textarea>
-                                    <button type="submit" class="bg-blue-600 text-white px-2 py-1 rounded text-sm hover:bg-blue-700 w-full">
+                                    <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 w-full">
                                         Tugaskan ke PIC
                                     </button>
                                 </form>
@@ -81,7 +81,6 @@
                 @endforeach
             </tbody>
         </table>
-    </main>
-
-</body>
-</html>
+    </div>
+@endif
+@endsection
