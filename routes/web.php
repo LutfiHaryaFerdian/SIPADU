@@ -5,6 +5,14 @@ use App\Http\Controllers\MultiAuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PicController;
 use App\Http\Controllers\AduanController;
+use App\Http\Controllers\RegisterController;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/register', [RegisterController::class, 'showForm'])->name('register.form');
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
 // ===================================================
 // AUTHENTICATION (Login & Logout per Role)

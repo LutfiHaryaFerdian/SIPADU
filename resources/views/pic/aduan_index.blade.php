@@ -3,58 +3,92 @@
 @section('title', 'Aduan Ditugaskan')
 
 @section('content')
-<h2 class="text-2xl font-bold mb-6 text-gray-800">Aduan yang Ditugaskan Kepada Anda</h2>
-
-@if(session('success'))
-    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-        {{ session('success') }}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <img src="https://cdn-icons-png.flaticon.com/512/3220/3220653.png" 
+             alt="Aduan PIC" class="img-fluid mb-3" style="max-height: 120px;">
+        <h2 class="fw-bold text-warning mb-1">
+            <i class="bi bi-list-task me-2"></i>Aduan Ditugaskan Kepada Anda
+        </h2>
+        <p class="text-muted mb-0">Kelola dan tangani aduan mahasiswa yang telah ditugaskan ke unit Anda.</p>
     </div>
-@endif
 
-@if($aduan->isEmpty())
-    <p class="text-gray-500 italic">Belum ada aduan yang ditugaskan.</p>
-@else
-    <div class="overflow-x-auto bg-white shadow rounded-lg">
-        <table class="min-w-full text-sm border-collapse">
-            <thead class="bg-yellow-100 text-yellow-800">
-                <tr>
-                    <th class="p-3 border text-left">Judul</th>
-                    <th class="p-3 border text-left">Mahasiswa</th>
-                    <th class="p-3 border text-left">Kategori</th>
-                    <th class="p-3 border text-left">Status</th>
-                    <th class="p-3 border text-left">Catatan Admin</th>
-                    <th class="p-3 border text-center w-32">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($aduan as $a)
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="p-3">{{ $a->judul }}</td>
-                        <td class="p-3">
-                            {{ $a->nama_mahasiswa }}<br>
-                            <span class="text-xs text-gray-500">({{ $a->npm }})</span>
-                        </td>
-                        <td class="p-3">{{ $a->kategori }}</td>
-                        <td class="p-3">
-                            @if($a->status === 'Menunggu')
-                                <span class="text-yellow-600 font-semibold">Menunggu</span>
-                            @elseif($a->status === 'Diproses')
-                                <span class="text-blue-600 font-semibold">Diproses</span>
-                            @else
-                                <span class="text-green-600 font-semibold">Selesai</span>
-                            @endif
-                        </td>
-                        <td class="p-3">{{ $a->catatan_admin ?? '-' }}</td>
-                        <td class="p-3 text-center">
-                            <a href="{{ route('pic.tindaklanjut.form', $a->id) }}"
-                               class="bg-yellow-600 text-white px-3 py-1 rounded text-sm hover:bg-yellow-700">
-                                Tindak Lanjut
-                            </a>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-@endif
+    {{-- Notifikasi --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    {{-- Tabel Aduan --}}
+    @if($aduan->isEmpty())
+        <div class="alert alert-warning text-center shadow-sm">
+            <i class="bi bi-info-circle-fill me-2"></i>Belum ada aduan yang ditugaskan.
+        </div>
+    @else
+        <div class="card shadow border-0">
+            <div class="card-header bg-warning text-dark fw-semibold">
+                <i class="bi bi-clipboard-data me-2"></i>Daftar Aduan Mahasiswa
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-warning text-dark">
+                            <tr>
+                                <th>Judul</th>
+                                <th>Mahasiswa</th>
+                                <th>Kategori</th>
+                                <th>Status</th>
+                                <th>Catatan Admin</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($aduan as $a)
+                                <tr>
+                                    <td class="fw-semibold">{{ $a->judul }}</td>
+                                    <td>
+                                        <strong>{{ $a->nama_mahasiswa }}</strong><br>
+                                        <small class="text-muted">({{ $a->npm }})</small>
+                                    </td>
+                                    <td>{{ $a->kategori }}</td>
+                                    <td>
+                                        @if($a->status === 'Menunggu')
+                                            <span class="badge bg-secondary"><i class="bi bi-hourglass me-1"></i>Menunggu</span>
+                                        @elseif($a->status === 'Diproses')
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-gear-fill me-1"></i>Diproses</span>
+                                        @else
+                                            <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Selesai</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $a->catatan_admin ?? '-' }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ route('pic.tindaklanjut.form', $a->id) }}" 
+                                           class="btn btn-sm btn-warning text-white shadow-sm">
+                                            <i class="bi bi-pencil-square me-1"></i>Tindak Lanjut
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endif
+</div>
+
+<style>
+.table thead.table-warning th {
+    background-color: #ffe58f !important;
+}
+.table-hover tbody tr:hover {
+    background-color: #fff3cd !important;
+}
+.card:hover {
+    transform: translateY(-4px);
+    transition: 0.3s ease;
+}
+</style>
 @endsection

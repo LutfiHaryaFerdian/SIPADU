@@ -3,44 +3,90 @@
 @section('title', 'Daftar Aduan Saya')
 
 @section('content')
-    <a href="{{ route('aduan.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded mb-4 inline-block hover:bg-blue-700">
-        + Tambah Aduan
-    </a>
+<div class="container my-5">
 
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-dark mb-1"><i class="bi bi-list-check me-2 text-primary"></i>Daftar Aduan Saya</h2>
+            <p class="text-muted mb-0">Lihat semua laporan yang telah Anda buat dan pantau statusnya.</p>
+        </div>
+        <a href="{{ route('aduan.create') }}" class="btn btn-primary shadow-sm">
+            <i class="bi bi-plus-circle me-1"></i> Tambah Aduan
+        </a>
+    </div>
+
+    <!-- Alert -->
     @if(session('success'))
-        <div class="bg-green-100 text-green-700 p-2 rounded mb-3">{{ session('success') }}</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-1"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     @endif
 
+    <!-- Table -->
     @if($aduan->isEmpty())
-        <p class="text-gray-500">Belum ada aduan.</p>
+        <div class="alert alert-secondary text-center py-4 shadow-sm">
+            <img src="https://cdn-icons-png.flaticon.com/512/7486/7486748.png" 
+                 alt="Empty" class="mb-2" style="height: 60px;">
+            <p class="mb-0 text-muted"><i class="bi bi-info-circle me-1"></i> Belum ada aduan yang dikirim.</p>
+        </div>
     @else
-        <table class="w-full border text-sm">
-            <thead class="bg-blue-100">
-                <tr>
-                    <th class="p-2 border">Judul</th>
-                    <th class="p-2 border">Kategori</th>
-                    <th class="p-2 border">Status</th>
-                    <th class="p-2 border">Nomor Tiket</th>
-                    <th class="p-2 border">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($aduan as $a)
-                    <tr class="border-t">
-                        <td class="p-2 border">{{ $a->judul }}</td>
-                        <td class="p-2 border">{{ $a->kategori }}</td>
-                        <td class="p-2 border">{{ $a->status }}</td>
-                        <td class="p-2 border">{{ $a->nomor_tiket }}</td>
-                        <td class="p-2 border">
-                            <form action="{{ route('aduan.destroy', $a->id) }}" method="POST" onsubmit="return confirm('Hapus aduan ini?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="text-red-600 hover:underline">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Judul</th>
+                                <th>Kategori</th>
+                                <th>Status</th>
+                                <th>Nomor Tiket</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($aduan as $a)
+                                <tr>
+                                    <td>{{ $a->judul }}</td>
+                                    <td>{{ $a->kategori }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            @if($a->status == 'Menunggu') bg-secondary
+                                            @elseif($a->status == 'Diproses') bg-warning text-dark
+                                            @elseif($a->status == 'Selesai') bg-success
+                                            @endif">
+                                            {{ $a->status }}
+                                        </span>
+                                    </td>
+                                    <td><code>{{ $a->nomor_tiket }}</code></td>
+                                    <td class="text-center">
+                                        <form action="{{ route('aduan.destroy', $a->id) }}" method="POST" 
+                                              onsubmit="return confirm('Yakin ingin menghapus aduan ini?')" 
+                                              class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash3"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     @endif
+</div>
+
+<style>
+.table th {
+    white-space: nowrap;
+}
+.table td {
+    vertical-align: middle;
+}
+</style>
 @endsection

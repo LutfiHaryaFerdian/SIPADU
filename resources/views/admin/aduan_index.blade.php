@@ -3,84 +3,137 @@
 @section('title', 'Manajemen Aduan')
 
 @section('content')
-<h2 class="text-2xl font-bold mb-6 text-gray-800">Daftar Aduan Mahasiswa</h2>
+<div class="container my-5">
 
-@if(session('success'))
-    <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-        {{ session('success') }}
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <img src="https://cdn-icons-png.flaticon.com/512/4727/4727424.png" 
+             alt="Manajemen Aduan" 
+             class="img-fluid mb-3" 
+             style="max-height: 120px;">
+        <h2 class="fw-bold text-danger">
+            <i class="bi bi-chat-left-text me-2"></i>Manajemen Aduan Mahasiswa
+        </h2>
+        <p class="text-muted">Kelola dan distribusikan aduan mahasiswa kepada PIC Unit dengan mudah.</p>
     </div>
-@endif
 
-@if(session('error'))
-    <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
-        {{ session('error') }}
-    </div>
-@endif
+    {{-- Notifikasi --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
-@if($aduan->isEmpty())
-    <p class="text-gray-500 italic">Belum ada aduan mahasiswa.</p>
-@else
-    <div class="overflow-x-auto bg-white shadow rounded-lg">
-        <table class="min-w-full text-sm border-collapse">
-            <thead class="bg-blue-100 text-blue-800">
-                <tr>
-                    <th class="p-3 border text-left">Judul</th>
-                    <th class="p-3 border text-left">Mahasiswa</th>
-                    <th class="p-3 border text-left">Kategori</th>
-                    <th class="p-3 border text-left">Status</th>
-                    <th class="p-3 border text-left">Nomor Tiket</th>
-                    <th class="p-3 border text-center w-40">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($aduan as $a)
-                    <tr class="border-b hover:bg-gray-50">
-                        <td class="p-3">{{ $a->judul }}</td>
-                        <td class="p-3">
-                            {{ $a->nama_mahasiswa }}<br>
-                            <span class="text-xs text-gray-500">({{ $a->npm }})</span>
-                        </td>
-                        <td class="p-3">{{ $a->kategori }}</td>
-                        <td class="p-3">
-                            @if($a->status === 'Menunggu')
-                                <span class="text-yellow-600 font-semibold">Menunggu</span>
-                            @elseif($a->status === 'Diproses')
-                                <span class="text-blue-600 font-semibold">Diproses</span>
-                            @else
-                                <span class="text-green-600 font-semibold">Selesai</span>
-                            @endif
-                        </td>
-                        <td class="p-3 font-mono">{{ $a->nomor_tiket }}</td>
-                        <td class="p-3 text-center">
-                            @if($a->status === 'Menunggu')
-                                <form action="{{ route('admin.aduan.assign', $a->id) }}" method="POST" class="mb-2">
-                                    @csrf
-                                    <select name="id_pic" class="border rounded p-1 w-full mb-1" required>
-                                        <option value="">Pilih PIC</option>
-                                        @foreach($picUnits as $p)
-                                            <option value="{{ $p->id }}">{{ $p->nama_unit }} - {{ $p->nama_pic }}</option>
-                                        @endforeach
-                                    </select>
-                                    <textarea name="catatan" placeholder="Catatan (opsional)" class="border rounded p-1 w-full text-sm mb-1"></textarea>
-                                    <button type="submit" class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 w-full">
-                                        Tugaskan ke PIC
-                                    </button>
-                                </form>
-                            @elseif($a->status === 'Diproses')
-                                <form action="{{ route('admin.aduan.done', $a->id) }}" method="POST">
-                                    @csrf
-                                    <button class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700 w-full">
-                                        Tandai Selesai
-                                    </button>
-                                </form>
-                            @else
-                                <span class="text-green-600 font-semibold">Selesai</span>
-                            @endif
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-@endif
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    {{-- Tabel Aduan --}}
+    @if($aduan->isEmpty())
+        <div class="alert alert-light border text-center py-4">
+            <i class="bi bi-info-circle-fill text-danger me-2"></i>
+            <span class="fw-semibold text-secondary">Belum ada aduan mahasiswa.</span>
+        </div>
+    @else
+        <div class="card shadow border-0">
+            <div class="card-header bg-danger text-white fw-semibold">
+                <i class="bi bi-clipboard-data me-2"></i> Daftar Aduan
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-danger">
+                            <tr>
+                                <th>Judul</th>
+                                <th>Mahasiswa</th>
+                                <th>Kategori</th>
+                                <th>Status</th>
+                                <th>Nomor Tiket</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($aduan as $a)
+                                <tr>
+                                    <td class="fw-semibold">{{ $a->judul }}</td>
+                                    <td>
+                                        <strong>{{ $a->nama_mahasiswa }}</strong><br>
+                                        <small class="text-muted">NPM: {{ $a->npm }}</small>
+                                    </td>
+                                    <td>{{ $a->kategori }}</td>
+                                    <td>
+                                        @if($a->status === 'Menunggu')
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-hourglass me-1"></i>Menunggu
+                                            </span>
+                                        @elseif($a->status === 'Diproses')
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-gear-fill me-1"></i>Diproses
+                                            </span>
+                                        @else
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle-fill me-1"></i>Selesai
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="font-monospace">{{ $a->nomor_tiket }}</td>
+                                    <td class="text-center">
+                                        @if($a->status === 'Menunggu')
+                                            <form action="{{ route('admin.aduan.assign', $a->id) }}" method="POST" class="p-2 bg-light rounded shadow-sm">
+                                                @csrf
+                                                <div class="mb-2">
+                                                    <select name="id_pic" class="form-select form-select-sm border-danger" required>
+                                                        <option value="">Pilih PIC Unit</option>
+                                                        @foreach($picUnits as $p)
+                                                            <option value="{{ $p->id }}">{{ $p->nama_unit }} - {{ $p->nama_pic }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <textarea name="catatan" placeholder="Catatan (opsional)" class="form-control form-control-sm border-danger" rows="2"></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-sm btn-danger w-100">
+                                                    <i class="bi bi-send-fill me-1"></i> Tugaskan ke PIC
+                                                </button>
+                                            </form>
+                                        @elseif($a->status === 'Diproses')
+                                            <form action="{{ route('admin.aduan.done', $a->id) }}" method="POST">
+                                                @csrf
+                                                <button class="btn btn-sm btn-success w-100 shadow-sm">
+                                                    <i class="bi bi-check2-circle me-1"></i> Tandai Selesai
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="text-success fw-semibold">
+                                                <i class="bi bi-check-circle me-1"></i> Selesai
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endif
+</div>
+
+<style>
+.card:hover {
+    transform: translateY(-3px);
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 8px 18px rgba(220, 53, 69, 0.2);
+}
+.table thead th {
+    vertical-align: middle;
+}
+select:focus, textarea:focus {
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+</style>
 @endsection

@@ -14,58 +14,119 @@
         ->get();
 @endphp
 
-<div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang, {{ session('mahasiswa')->nama }}</h1>
-    <p class="text-gray-600">Gunakan menu di sebelah kiri untuk membuat atau melihat status aduan Anda.</p>
-</div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-    <a href="/mahasiswa/aduan/create" class="bg-blue-600 text-white p-6 rounded-xl shadow hover:bg-blue-700 transition transform hover:-translate-y-1">
-        <h3 class="text-xl font-semibold mb-2">+ Buat Aduan Baru</h3>
-        <p class="text-sm text-blue-100">Laporkan permasalahan Anda dengan cepat dan mudah.</p>
-    </a>
-
-    <a href="/mahasiswa/aduan" class="bg-gray-700 text-white p-6 rounded-xl shadow hover:bg-gray-800 transition transform hover:-translate-y-1">
-        <h3 class="text-xl font-semibold mb-2">📋 Lihat Semua Aduan</h3>
-        <p class="text-sm text-gray-200">Pantau status dan tindak lanjut aduan Anda.</p>
-    </a>
-</div>
-
-<div class="bg-white rounded-xl shadow p-6">
-    <h3 class="text-lg font-bold mb-4 border-b pb-2">Aduan Terbaru</h3>
-
-    @if($aduanTerbaru->isEmpty())
-        <p class="text-gray-500 italic">Belum ada aduan yang dikirim.</p>
-    @else
-        <div class="overflow-x-auto">
-            <table class="min-w-full text-sm border border-gray-300">
-                <thead class="bg-green-100">
-                    <tr>
-                        <th class="border p-3 text-left">Judul</th>
-                        <th class="border p-3 text-left">Kategori</th>
-                        <th class="border p-3 text-left">Status</th>
-                        <th class="border p-3 text-left">Tanggal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($aduanTerbaru as $a)
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="border p-3">{{ $a->judul }}</td>
-                            <td class="border p-3">{{ $a->kategori }}</td>
-                            <td class="border p-3">
-                                <span class="px-2 py-1 rounded text-white 
-                                    @if($a->status == 'Diproses') bg-yellow-500 
-                                    @elseif($a->status == 'Selesai') bg-green-600 
-                                    @else bg-gray-500 @endif">
-                                    {{ $a->status }}
-                                </span>
-                            </td>
-                            <td class="border p-3">{{ Carbon::parse($a->created_at)->format('d M Y') }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+<!-- 🔹 Hero Section -->
+<section class="py-5 text-center bg-light position-relative overflow-hidden">
+    <div class="container position-relative">
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-6 text-start">
+                <h1 class="fw-bold text-primary mb-2">
+                    Halo, {{ session('mahasiswa')->nama }}! 👋
+                </h1>
+                <p class="text-muted mb-4">
+                    Selamat datang di <strong>SIPADU Universitas Lampung</strong>.<br>
+                    Laporkan, pantau, dan tindak lanjuti aduan Anda dengan mudah.
+                </p>
+                <a href="/mahasiswa/aduan/create" class="btn btn-primary me-2">
+                    <i class="bi bi-plus-circle me-1"></i> Buat Aduan Baru
+                </a>
+                <a href="/mahasiswa/aduan" class="btn btn-outline-primary">
+                    <i class="bi bi-journal-text me-1"></i> Lihat Aduan Saya
+                </a>
+            </div>
+            <div class="col-lg-5 text-center d-none d-lg-block">
+                <img src="https://cdn-icons-png.flaticon.com/512/9019/9019781.png" 
+                     alt="Mahasiswa Illustration" class="img-fluid" style="max-height: 280px;">
+            </div>
         </div>
-    @endif
+    </div>
+</section>
+
+<!-- 🔹 Statistik Ringkas -->
+<div class="container my-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card text-center border-0 shadow-sm h-100 role-card bg-primary text-white">
+                <div class="card-body p-4">
+                    <i class="bi bi-envelope-paper display-5 mb-2"></i>
+                    <h5 class="fw-semibold mb-1">Total Aduan</h5>
+                    <p class="fs-3 fw-bold mb-0">{{ DB::table('aduan')->where('id_mahasiswa', session('mahasiswa')->id)->count() }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center border-0 shadow-sm h-100 role-card bg-warning text-white">
+                <div class="card-body p-4">
+                    <i class="bi bi-hourglass-split display-5 mb-2"></i>
+                    <h5 class="fw-semibold mb-1">Sedang Diproses</h5>
+                    <p class="fs-3 fw-bold mb-0">{{ DB::table('aduan')->where('id_mahasiswa', session('mahasiswa')->id)->where('status', 'Diproses')->count() }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center border-0 shadow-sm h-100 role-card bg-success text-white">
+                <div class="card-body p-4">
+                    <i class="bi bi-check-circle display-5 mb-2"></i>
+                    <h5 class="fw-semibold mb-1">Selesai</h5>
+                    <p class="fs-3 fw-bold mb-0">{{ DB::table('aduan')->where('id_mahasiswa', session('mahasiswa')->id)->where('status', 'Selesai')->count() }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- 🔹 Aduan Terbaru -->
+<div class="container mb-5">
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-success text-white fw-semibold">
+            <i class="bi bi-clock-history me-2"></i> Aduan Terbaru Anda
+        </div>
+        <div class="card-body p-0">
+            @if($aduanTerbaru->isEmpty())
+                <p class="p-4 text-center text-muted fst-italic">Belum ada aduan yang dikirim.</p>
+            @else
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle mb-0">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Judul</th>
+                                <th>Kategori</th>
+                                <th>Status</th>
+                                <th>Tanggal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($aduanTerbaru as $a)
+                                <tr>
+                                    <td>{{ $a->judul }}</td>
+                                    <td>{{ $a->kategori }}</td>
+                                    <td>
+                                        <span class="badge 
+                                            @if($a->status == 'Diproses') bg-warning text-dark
+                                            @elseif($a->status == 'Selesai') bg-success
+                                            @else bg-secondary @endif">
+                                            {{ $a->status }}
+                                        </span>
+                                    </td>
+                                    <td>{{ Carbon::parse($a->created_at)->format('d M Y') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<style>
+.role-card {
+    transition: all 0.3s ease;
+}
+.role-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+</style>
 @endsection

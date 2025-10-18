@@ -3,32 +3,48 @@
 @section('title', 'Buat Aduan Baru')
 
 @section('content')
-<div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-    <h2 class="text-2xl font-bold mb-6 text-blue-700 text-center">Buat Aduan Baru</h2>
+<div class="container my-5">
+    <!-- Hero Section -->
+    <div class="text-center mb-5">
+        <img src="https://cdn-icons-png.flaticon.com/512/3588/3588700.png" 
+             alt="Buat Aduan" class="img-fluid mb-3" style="max-height: 120px;">
+        <h2 class="fw-bold text-primary">Buat Aduan Baru</h2>
+        <p class="text-muted">Sampaikan permasalahan Anda secara jelas agar dapat segera ditindaklanjuti.</p>
+    </div>
 
-    <form method="POST" action="{{ route('aduan.store') }}">
-        @csrf
-        <div class="mb-4">
-            <label class="block mb-1 font-semibold">Judul Aduan</label>
-            <input type="text" name="judul" class="border w-full p-3 rounded focus:ring-2 focus:ring-blue-500" required>
+    <!-- Form Aduan -->
+    <div class="card shadow-lg border-0 mx-auto" style="max-width: 720px;">
+        <div class="card-header bg-primary text-white text-center fw-semibold">
+            <i class="bi bi-pencil-square me-2"></i> Form Pengaduan Mahasiswa
         </div>
+        <div class="card-body p-4">
+            <form method="POST" action="{{ route('aduan.store') }}">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Judul Aduan</label>
+                    <input type="text" name="judul" class="form-control" placeholder="Masukkan judul aduan..." required>
+                </div>
 
-        <div class="mb-4">
-            <label class="block mb-1 font-semibold">Kategori</label>
-            <input type="text" name="kategori" class="border w-full p-3 rounded focus:ring-2 focus:ring-blue-500" required>
-        </div>
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Kategori</label>
+                    <input type="text" name="kategori" class="form-control" placeholder="Masukkan kategori aduan..." required>
+                </div>
 
-        <div class="mb-6">
-            <label class="block mb-1 font-semibold">Deskripsi</label>
-            <textarea name="deskripsi" rows="5" class="border w-full p-3 rounded focus:ring-2 focus:ring-blue-500" required></textarea>
-        </div>
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Deskripsi</label>
+                    <textarea name="deskripsi" rows="5" class="form-control" placeholder="Tuliskan deskripsi lengkap aduan Anda..." required></textarea>
+                </div>
 
-        <div class="flex justify-between items-center">
-            <a href="{{ route('aduan.index') }}" class="text-blue-600 hover:underline">← Kembali ke Daftar Aduan</a>
-            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 shadow">
-                Kirim Aduan
-            </button>
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ route('aduan.index') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Kembali
+                    </a>
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-send-fill me-1"></i> Kirim Aduan
+                    </button>
+                </div>
+            </form>
         </div>
-    </form>
+    </div>
 </div>
 @endsection
