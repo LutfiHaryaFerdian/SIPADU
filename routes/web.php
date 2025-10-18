@@ -1,37 +1,62 @@
 <?php
 
-use App\Http\Controllers\MultiAuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MultiAuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PicController;
+use App\Http\Controllers\AduanController;
+use App\Http\Controllers\RegisterController;
 
-// Halaman login untuk masing-masing role
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/register', [RegisterController::class, 'showForm'])->name('register.form');
+Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
+// ===================================================
+// AUTHENTICATION (Login & Logout per Role)
+// ===================================================
 Route::get('/login/{role}', [MultiAuthController::class, 'showLogin'])->name('login.role');
 Route::post('/login/{role}', [MultiAuthController::class, 'login'])->name('login.process');
 Route::get('/logout/{role}', [MultiAuthController::class, 'logout'])->name('logout.role');
 
-// Middleware per role
+// ===================================================
+// ADMIN ROUTES
+// ===================================================
 Route::middleware('admin')->group(function () {
-    Route::get('/admin/dashboard', fn() => view('dashboard.admin'));
+    // Dashboard Admin
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::get('/admin/aduan', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.aduan.index');
-    Route::post('/admin/aduan/{id}/assign', [App\Http\Controllers\AdminController::class, 'assignToPic'])->name('admin.aduan.assign');
-    Route::post('/admin/aduan/{id}/done', [App\Http\Controllers\AdminController::class, 'markAsDone'])->name('admin.aduan.done');
+
+    // Manajemen Aduan
+    Route::get('/admin/aduan', [AdminController::class, 'indexAduan'])->name('admin.aduan.index');
+    Route::post('/admin/aduan/{id}/assign', [AdminController::class, 'assignToPic'])->name('admin.aduan.assign');
+    Route::post('/admin/aduan/{id}/done', [AdminController::class, 'markAsDone'])->name('admin.aduan.done');
 });
 
+// ===================================================
+// MAHASISWA ROUTES
+// ===================================================
 Route::middleware('mahasiswa')->group(function () {
-    Route::get('/mahasiswa/dashboard', fn() => view('dashboard.mahasiswa'));
+    // Dashboard Mahasiswa
+    Route::get('/mahasiswa/dashboard', fn() => view('dashboard.mahasiswa'))->name('mahasiswa.dashboard');
 
-    Route::get('/mahasiswa/aduan', [App\Http\Controllers\AduanController::class, 'index'])->name('aduan.index');
-    Route::get('/mahasiswa/aduan/create', [App\Http\Controllers\AduanController::class, 'create'])->name('aduan.create');
-    Route::post('/mahasiswa/aduan', [App\Http\Controllers\AduanController::class, 'store'])->name('aduan.store');
-    Route::delete('/mahasiswa/aduan/{id}', [App\Http\Controllers\AduanController::class, 'destroy'])->name('aduan.destroy');
+    // CRUD Aduan Mahasiswa
+    Route::get('/mahasiswa/aduan', [AduanController::class, 'index'])->name('aduan.index');
+    Route::get('/mahasiswa/aduan/create', [AduanController::class, 'create'])->name('aduan.create');
+    Route::post('/mahasiswa/aduan', [AduanController::class, 'store'])->name('aduan.store');
+    Route::delete('/mahasiswa/aduan/{id}', [AduanController::class, 'destroy'])->name('aduan.destroy');
 });
 
+// ===================================================
+// PIC UNIT ROUTES
+// ===================================================
 Route::middleware('pic')->group(function () {
-    Route::get('/pic/dashboard', fn() => view('dashboard.pic'));
+    // Dashboard PIC
     Route::get('/pic/dashboard', [PicController::class, 'index'])->name('pic.dashboard');
-    Route::get('/pic/aduan', [App\Http\Controllers\PicController::class, 'index'])->name('pic.aduan.index');
-    Route::get('/pic/aduan/{id}/tindaklanjut', [App\Http\Controllers\PicController::class, 'tindakLanjutForm'])->name('pic.tindaklanjut.form');
-    Route::post('/pic/aduan/{id}/tindaklanjut', [App\Http\Controllers\PicController::class, 'tindakLanjutStore'])->name('pic.tindaklanjut.store');
+
+    // Aduan & Tindak Lanjut
+    Route::get('/pic/aduan', [PicController::class, 'indexAduan'])->name('pic.aduan.index');
+    Route::get('/pic/aduan/{id}/tindaklanjut', [PicController::class, 'tindakLanjutForm'])->name('pic.tindaklanjut.form');
+    Route::post('/pic/aduan/{id}/tindaklanjut', [PicController::class, 'tindakLanjutStore'])->name('pic.tindaklanjut.store');
 });

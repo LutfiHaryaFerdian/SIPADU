@@ -1,60 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard PIC - SIPADU</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50">
+@extends('layouts.pic')
 
-    <!-- Navbar -->
-    <nav class="bg-yellow-600 text-white p-4 flex justify-between">
-        <h1 class="text-xl font-semibold">Dashboard PIC - SIPADU</h1>
-        <a href="/logout/pic" class="hover:underline">Logout</a>
-    </nav>
+@section('title', 'Aduan Ditugaskan')
 
-    <!-- Content -->
-    <main class="p-8">
-        <h2 class="text-2xl mb-6 font-bold">Aduan yang Ditugaskan</h2>
+@section('content')
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <img src="https://cdn-icons-png.flaticon.com/512/3220/3220653.png" 
+             alt="Aduan PIC" class="img-fluid mb-3" style="max-height: 120px;">
+        <h2 class="fw-bold text-warning mb-1">
+            <i class="bi bi-list-task me-2"></i>Aduan Ditugaskan Kepada Anda
+        </h2>
+        <p class="text-muted mb-0">Kelola dan tangani aduan mahasiswa yang telah ditugaskan ke unit Anda.</p>
+    </div>
 
-        @if(session('success'))
-            <div class="bg-green-100 text-green-700 p-3 rounded mb-4">
-                {{ session('success') }}
+    {{-- Notifikasi --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    {{-- Tabel Aduan --}}
+    @if($aduan->isEmpty())
+        <div class="alert alert-warning text-center shadow-sm">
+            <i class="bi bi-info-circle-fill me-2"></i>Belum ada aduan yang ditugaskan.
+        </div>
+    @else
+        <div class="card shadow border-0">
+            <div class="card-header bg-warning text-dark fw-semibold">
+                <i class="bi bi-clipboard-data me-2"></i>Daftar Aduan Mahasiswa
             </div>
-        @endif
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-warning text-dark">
+                            <tr>
+                                <th>Judul</th>
+                                <th>Mahasiswa</th>
+                                <th>Kategori</th>
+                                <th>Status</th>
+                                <th>Catatan Admin</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($aduan as $a)
+                                <tr>
+                                    <td class="fw-semibold">{{ $a->judul }}</td>
+                                    <td>
+                                        <strong>{{ $a->nama_mahasiswa }}</strong><br>
+                                        <small class="text-muted">({{ $a->npm }})</small>
+                                    </td>
+                                    <td>{{ $a->kategori }}</td>
+                                    <td>
+                                        @if($a->status === 'Menunggu')
+                                            <span class="badge bg-secondary"><i class="bi bi-hourglass me-1"></i>Menunggu</span>
+                                        @elseif($a->status === 'Diproses')
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-gear-fill me-1"></i>Diproses</span>
+                                        @else
+                                            <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Selesai</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $a->catatan_admin ?? '-' }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ route('pic.tindaklanjut.form', $a->id) }}" 
+                                           class="btn btn-sm btn-warning text-white shadow-sm">
+                                            <i class="bi bi-pencil-square me-1"></i>Tindak Lanjut
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endif
+</div>
 
-        <table class="w-full border text-sm">
-            <thead class="bg-yellow-100">
-                <tr>
-                    <th class="border p-2">Judul</th>
-                    <th class="border p-2">Mahasiswa</th>
-                    <th class="border p-2">Kategori</th>
-                    <th class="border p-2">Status</th>
-                    <th class="border p-2">Catatan Admin</th>
-                    <th class="border p-2">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($aduan as $a)
-                    <tr class="border-t">
-                        <td class="border p-2">{{ $a->judul }}</td>
-                        <td class="border p-2">
-                            {{ $a->nama_mahasiswa }}<br>
-                            <span class="text-xs text-gray-500">({{ $a->npm }})</span>
-                        </td>
-                        <td class="border p-2">{{ $a->kategori }}</td>
-                        <td class="border p-2">{{ $a->status }}</td>
-                        <td class="border p-2">{{ $a->catatan_admin ?? '-' }}</td>
-                        <td class="border p-2">
-                            <a href="{{ route('pic.tindaklanjut.form', $a->id) }}" class="bg-yellow-600 text-white px-3 py-1 rounded text-sm hover:bg-yellow-700">
-                                Tindak Lanjut
-                            </a>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </main>
-
-</body>
-</html>
+<style>
+.table thead.table-warning th {
+    background-color: #ffe58f !important;
+}
+.table-hover tbody tr:hover {
+    background-color: #fff3cd !important;
+}
+.card:hover {
+    transform: translateY(-4px);
+    transition: 0.3s ease;
+}
+</style>
+@endsection

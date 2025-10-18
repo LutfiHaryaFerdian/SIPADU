@@ -8,15 +8,49 @@ use Illuminate\Support\Str;
 
 class PicController extends Controller
 {
-    // 📋 Menampilkan aduan yang ditugaskan ke PIC ini
+    // 📊 Dashboard PIC Unit
     public function index()
+    {
+        $pic = session('pic');
+
+        // Statistik ringkasan
+        $totalTugas = DB::table('penugasan')->where('id_pic', $pic->id)->count();
+        $aduanSelesai = DB::table('tindak_lanjut')
+            ->where('id_pic', $pic->id)
+            ->where('status', 'Selesai')
+            ->count();
+
+        $aduanProses = DB::table('tindak_lanjut')
+            ->where('id_pic', $pic->id)
+            ->where('status', 'Sedang Dikerjakan')
+            ->count();
+
+        // Ambil 5 aduan terbaru
+        $aduanTerbaru = DB::table('aduan')
+            ->join('penugasan', 'aduan.id', '=', 'penugasan.id_aduan')
+            ->where('penugasan.id_pic', $pic->id)
+            ->select('aduan.*')
+            ->orderByDesc('aduan.created_at')
+            ->limit(5)
+            ->get();
+
+        return view('dashboard.pic', compact('totalTugas', 'aduanSelesai', 'aduanProses', 'aduanTerbaru'));
+    }
+
+    // 📋 Menampilkan semua aduan yang ditugaskan ke PIC ini
+    public function indexAduan()
     {
         $pic = session('pic');
 
         $aduan = DB::table('penugasan')
             ->join('aduan', 'penugasan.id_aduan', '=', 'aduan.id')
             ->join('mahasiswa', 'aduan.id_mahasiswa', '=', 'mahasiswa.id')
-            ->select('aduan.*', 'mahasiswa.nama as nama_mahasiswa', 'mahasiswa.npm', 'penugasan.catatan as catatan_admin')
+            ->select(
+                'aduan.*',
+                'mahasiswa.nama as nama_mahasiswa',
+                'mahasiswa.npm',
+                'penugasan.catatan as catatan_admin'
+            )
             ->where('penugasan.id_pic', $pic->id)
             ->orderByDesc('aduan.created_at')
             ->get();
@@ -60,6 +94,6 @@ class PicController extends Controller
             DB::table('aduan')->where('id', $id)->update(['status' => 'Selesai']);
         }
 
-        return redirect('/pic/aduan')->with('success', 'Tindak lanjut berhasil ditambahkan.');
+        return redirect()->route('pic.aduan.index')->with('success', 'Tindak lanjut berhasil ditambahkan.');
     }
 }

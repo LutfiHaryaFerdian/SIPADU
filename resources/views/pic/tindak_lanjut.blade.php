@@ -1,44 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Tindak Lanjut Aduan - SIPADU</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 flex justify-center items-center h-screen">
+@extends('layouts.pic')
 
-    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h1 class="text-xl font-bold mb-4 text-yellow-700">Tindak Lanjut Aduan</h1>
+@section('title', 'Tindak Lanjut Aduan')
 
-        <p class="text-sm text-gray-600 mb-2">
-            <strong>Judul:</strong> {{ $aduan->judul }} <br>
-            <strong>Kategori:</strong> {{ $aduan->kategori }}
-        </p>
-
-        <form method="POST" action="{{ route('pic.tindaklanjut.store', $aduan->id) }}">
-            @csrf
-            <div class="mb-4">
-                <label class="block mb-1">Catatan Tindak Lanjut</label>
-                <textarea name="catatan" class="border w-full p-2 rounded" rows="4" required></textarea>
-            </div>
-
-            <div class="mb-4">
-                <label class="block mb-1">Status</label>
-                <select name="status" class="border w-full p-2 rounded" required>
-                    <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
-                    <option value="Selesai">Selesai</option>
-                </select>
-            </div>
-
-            <button type="submit" class="w-full bg-yellow-600 text-white py-2 rounded hover:bg-yellow-700">
-                Simpan Tindak Lanjut
-            </button>
-        </form>
-
-        <div class="mt-4 text-center">
-            <a href="{{ route('pic.aduan.index') }}" class="text-yellow-700 hover:underline">← Kembali</a>
-        </div>
+@section('content')
+<div class="container my-5">
+    <div class="text-center mb-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png"
+             alt="Tindak Lanjut" class="img-fluid mb-3" style="max-height: 110px;">
+        <h2 class="fw-bold text-warning mb-1">
+            <i class="bi bi-pencil-square me-2"></i>Tindak Lanjut Aduan
+        </h2>
+        <p class="text-muted">Catat progres dan ubah status penyelesaian aduan mahasiswa.</p>
     </div>
 
-</body>
-</html>
+    <div class="card shadow-lg border-0 mx-auto" style="max-width: 650px;">
+        <div class="card-header bg-warning text-dark text-center fw-semibold">
+            <i class="bi bi-clipboard-check me-2"></i>Formulir Tindak Lanjut
+        </div>
+        <div class="card-body p-4">
+            {{-- Info Aduan --}}
+            <div class="mb-4 border-start border-4 border-warning ps-3">
+                <p class="mb-1"><strong>Judul:</strong> {{ $aduan->judul }}</p>
+                <p class="mb-1"><strong>Kategori:</strong> {{ $aduan->kategori }}</p>
+            </div>
+
+            {{-- Form --}}
+            <form method="POST" action="{{ route('pic.tindaklanjut.store', $aduan->id) }}">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Catatan Tindak Lanjut</label>
+                    <textarea name="catatan" class="form-control shadow-sm" rows="5" 
+                              placeholder="Tuliskan hasil atau progres tindak lanjut..." required></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Status</label>
+                    <select name="status" class="form-select shadow-sm" required>
+                        <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
+                        <option value="Selesai">Selesai</option>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{{ route('pic.aduan.index') }}" class="btn btn-outline-secondary shadow-sm">
+                        <i class="bi bi-arrow-left-circle me-1"></i> Kembali
+                    </a>
+                    <button type="submit" class="btn btn-warning text-white shadow-sm fw-semibold">
+                        <i class="bi bi-save me-1"></i> Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.card:hover {
+    transform: translateY(-4px);
+    transition: 0.3s ease;
+    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+}
+.form-control:focus, .form-select:focus {
+    border-color: #ffcd39;
+    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.3);
+}
+</style>
+@endsection

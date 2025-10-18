@@ -1,52 +1,141 @@
+@extends('layouts.pic')
+
+@section('title', 'Dashboard PIC Unit')
+
+@section('content')
 @php
     use Illuminate\Support\Facades\DB;
-    use Carbon\Carbon;
+    $id_pic = session('pic')->id;
+
+    $aduanDitugaskan = DB::table('penugasan')->where('id_pic', $id_pic)->count();
+    $aduanSelesai = DB::table('tindak_lanjut')
+        ->where('id_pic', $id_pic)
+        ->where('status', 'Selesai')
+        ->count();
+
+    $aduanProses = DB::table('tindak_lanjut')
+        ->where('id_pic', $id_pic)
+        ->where('status', 'Sedang Dikerjakan')
+        ->count();
 @endphp
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard PIC Unit - SIPADU</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50">
-    <nav class="bg-yellow-600 text-white p-4 flex justify-between">
-        <h1 class="text-xl font-semibold">Dashboard PIC Unit</h1>
-        <a href="/logout/pic" class="hover:underline">Logout</a>
-    </nav>
 
-    <main class="p-8">
-        <h2 class="text-2xl mb-4">Selamat Datang, {{ session('pic')->nama_pic }}</h2>
+<div class="container my-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <img src="https://cdn-icons-png.flaticon.com/512/2920/2920252.png" 
+             alt="PIC Illustration" class="img-fluid mb-3" style="max-height: 120px;">
+        <h1 class="fw-bold text-warning mb-1">
+            <i class="bi bi-building-gear me-2"></i>Dashboard PIC Unit
+        </h1>
+        <p class="text-muted mb-0">Pantau dan kelola aduan yang ditugaskan ke unit Anda.</p>
+    </div>
 
-        @php
-            $pic = session('pic');
-            $tugasAktif = DB::table('penugasan')
-                ->join('aduan', 'penugasan.id_aduan', '=', 'aduan.id')
-                ->where('penugasan.id_pic', $pic->id)
-                ->where('aduan.status', '!=', 'Selesai')
-                ->count();
-
-            $tugasSelesai = DB::table('penugasan')
-                ->join('aduan', 'penugasan.id_aduan', '=', 'aduan.id')
-                ->where('penugasan.id_pic', $pic->id)
-                ->where('aduan.status', 'Selesai')
-                ->count();
-        @endphp
-
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="bg-blue-100 p-4 rounded-lg text-center">
-                <h3 class="text-lg font-bold">Tugas Aktif</h3>
-                <p class="text-2xl font-bold text-blue-700">{{ $tugasAktif }}</p>
-            </div>
-            <div class="bg-green-100 p-4 rounded-lg text-center">
-                <h3 class="text-lg font-bold">Tugas Selesai</h3>
-                <p class="text-2xl font-bold text-green-700">{{ $tugasSelesai }}</p>
+    <!-- Statistik -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card text-dark bg-warning bg-opacity-75 shadow border-0 h-100">
+                <div class="card-body d-flex align-items-center">
+                    <i class="bi bi-briefcase-fill display-5 text-dark me-3"></i>
+                    <div>
+                        <h6 class="fw-semibold mb-0">Total Tugas</h6>
+                        <h3 class="fw-bold mb-0">{{ $aduanDitugaskan }}</h3>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card text-dark bg-light shadow border-0 h-100">
+                <div class="card-body d-flex align-items-center">
+                    <i class="bi bi-tools display-5 text-warning me-3"></i>
+                    <div>
+                        <h6 class="fw-semibold mb-0">Sedang Dikerjakan</h6>
+                        <h3 class="fw-bold mb-0">{{ $aduanProses }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success shadow border-0 h-100">
+                <div class="card-body d-flex align-items-center">
+                    <i class="bi bi-check-circle-fill display-5 me-3"></i>
+                    <div>
+                        <h6 class="fw-semibold mb-0">Selesai</h6>
+                        <h3 class="fw-bold mb-0">{{ $aduanSelesai }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <a href="{{ route('pic.dashboard') }}" class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">
-            Lihat Semua Tugas
-        </a>
-    </main>
-</body>
-</html>
+    <!-- Aduan Terbaru -->
+    <div class="card shadow border-0">
+        <div class="card-header bg-warning text-dark fw-semibold">
+            <i class="bi bi-list-check me-2"></i>Aduan Terbaru yang Ditugaskan
+        </div>
+        <div class="card-body p-0">
+            @php
+                $aduanTerbaru = DB::table('aduan')
+                    ->join('penugasan', 'aduan.id', '=', 'penugasan.id_aduan')
+                    ->where('penugasan.id_pic', $id_pic)
+                    ->orderBy('aduan.created_at', 'desc')
+                    ->limit(5)
+                    ->get();
+            @endphp
+
+            @if($aduanTerbaru->isEmpty())
+                <div class="p-4 text-center text-muted">
+                    <i class="bi bi-info-circle me-2"></i>Belum ada aduan yang ditugaskan.
+                </div>
+            @else
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-warning">
+                            <tr>
+                                <th>Judul</th>
+                                <th>Kategori</th>
+                                <th>Status</th>
+                                <th>Tanggal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($aduanTerbaru as $a)
+                            <tr>
+                                <td>{{ $a->judul }}</td>
+                                <td>{{ $a->kategori }}</td>
+                                <td>
+                                    @if($a->status == 'Menunggu')
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-hourglass me-1"></i>Menunggu
+                                        </span>
+                                    @elseif($a->status == 'Diproses')
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-gear-fill me-1"></i>Diproses
+                                        </span>
+                                    @else
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle-fill me-1"></i>Selesai
+                                        </span>
+                                    @endif
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($a->created_at)->format('d M Y') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+        </div>
+    </div>
+</div>
+
+<style>
+.card:hover {
+    transform: translateY(-4px);
+    transition: 0.3s ease;
+    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+}
+.table-warning th {
+    background-color: #ffe082 !important;
+}
+</style>
+@endsection
