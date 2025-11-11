@@ -25,7 +25,7 @@
 
         .hero {
             min-height: 100vh;
-            background: url('https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            background: url('{{ asset("images/unila.jpg") }}') center/cover no-repeat;
             position: relative;
         }
         .hero::before {
