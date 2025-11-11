@@ -34,7 +34,6 @@
         @elseif($role === 'mahasiswa')
             body {
                 background-image: url('{{ asset("images/mahasiswa.jpeg") }}');
-
             }
             .overlay { background: rgba(13, 110, 253, 0.4); } /* biru transparan */
             .theme-color { color: #0d6efd; }
@@ -42,7 +41,7 @@
             .btn-theme:hover { background-color: #0b5ed7; }
         @elseif($role === 'pic')
             body {
-                background-image: url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1920&q=80');
+                background-image: url('{{ asset("images/TIK.png") }}');
             }
             .overlay { background: rgba(255, 193, 7, 0.4); } /* kuning transparan */
             .theme-color { color: #ffc107; }
