@@ -25,7 +25,7 @@
         /* === Background per role === */
         @if($role === 'admin')
             body {
-                background-image: url('https://images.unsplash.com/photo-1593642532973-d31b6557fa68?auto=format&fit=crop&w=1600&q=80');
+                background-image: url('{{ asset("images/admin.png") }}');
             }
             .overlay { background: rgba(220, 53, 69, 0.4); } /* merah transparan */
             .theme-color { color: #dc3545; }
