@@ -106,8 +106,8 @@
                 <!-- Mahasiswa -->
                 <div class="col-md-4 col-lg-3">
                     <div class="card role-card shadow-sm border-0 fade-in">
-                        <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Mahasiswa" onerror="this.src='https://via.placeholder.com/800x140/007bff/ffffff?text=Mahasiswa';">
-                        <div class="card-body text-center">
+                        <img src="{{ asset('images/mahasiswa.jpeg') }}" alt="PIC Unit" onerror="this.src='https://via.placeholder.com/800x140/f0ad4e/ffffff?text=PIC+Unit';">
+                            <div class="card-body text-center">
                             <i class="bi bi-person-circle text-primary display-5 mb-2"></i>
                             <h5 class="fw-semibold mb-3">Login Mahasiswa</h5>
                             <a href="/login/mahasiswa" class="btn btn-primary w-100">Masuk</a>
@@ -118,7 +118,7 @@
                 <!-- PIC Unit -->
                 <div class="col-md-4 col-lg-3">
                     <div class="card role-card shadow-sm border-0 fade-in">
-                        <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="PIC Unit" onerror="this.src='https://via.placeholder.com/800x140/f0ad4e/ffffff?text=PIC+Unit';">
+                       <img src="{{ asset('images/pic-unit.jpg') }}" alt="PIC Unit" onerror="this.src='https://via.placeholder.com/800x140/f0ad4e/ffffff?text=PIC+Unit';">
                         <div class="card-body text-center">
                             <i class="bi bi-building-gear text-warning display-5 mb-2"></i>
                             <h5 class="fw-semibold mb-3">Login PIC Unit</h5>
