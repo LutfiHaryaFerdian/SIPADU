@@ -16,7 +16,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             min-height: 100vh;
-            background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1920&q=80');
+             background-image: url('{{ asset("images/mahasiswa.jpeg") }}');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;

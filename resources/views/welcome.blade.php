@@ -118,7 +118,7 @@
                 <!-- PIC Unit -->
                 <div class="col-md-4 col-lg-3">
                     <div class="card role-card shadow-sm border-0 fade-in">
-                       <img src="{{ asset('images/pic-unit.jpg') }}" alt="PIC Unit" onerror="this.src='https://via.placeholder.com/800x140/f0ad4e/ffffff?text=PIC+Unit';">
+                       <img src="{{ asset('images/TIK.png') }}" alt="PIC Unit" onerror="this.src='https://via.placeholder.com/800x140/f0ad4e/ffffff?text=PIC+Unit';">
                         <div class="card-body text-center">
                             <i class="bi bi-building-gear text-warning display-5 mb-2"></i>
                             <h5 class="fw-semibold mb-3">Login PIC Unit</h5>
@@ -130,7 +130,7 @@
                 <!-- Admin -->
                 <div class="col-md-4 col-lg-3">
                     <div class="card role-card shadow-sm border-0 fade-in">
-                        <img src="https://images.unsplash.com/photo-1591696205602-2f950c417cb9?auto=format&fit=crop&w=800&q=80" alt="Admin SIPADU">
+                        <img src="{{ asset('images/admin.png') }}" alt="Admin SIPADU">
                         <div class="card-body text-center">
                             <i class="bi bi-shield-lock text-danger display-5 mb-2"></i>
                             <h5 class="fw-semibold mb-3">Login Admin</h5>
