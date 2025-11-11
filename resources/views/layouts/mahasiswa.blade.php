@@ -30,6 +30,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="/mahasiswa/aduan-publik" class="nav-link {{ request()->is('mahasiswa/aduan-publik') ? 'active fw-bold' : '' }}">
+                        <i class="bi bi-globe2 me-1"></i>Lihat Aduan Publik
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="/logout/mahasiswa" class="nav-link text-light fw-semibold bg-danger bg-opacity-25 px-3 rounded-3">
                         <i class="bi bi-box-arrow-right me-1"></i>Logout
                     </a>

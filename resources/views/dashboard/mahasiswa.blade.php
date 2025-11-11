@@ -32,6 +32,9 @@
                 <a href="/mahasiswa/aduan" class="btn btn-outline-primary">
                     <i class="bi bi-journal-text me-1"></i> Lihat Aduan Saya
                 </a>
+                <a href="/mahasiswa/aduan-publik" class="btn btn-outline-primary">
+                    <i class="bi bi-globe2 me-2"></i> Lihat Aduan Publik
+                </a>
             </div>
             <div class="col-lg-5 text-center d-none d-lg-block">
                 <img src="https://cdn-icons-png.flaticon.com/512/9019/9019781.png" 

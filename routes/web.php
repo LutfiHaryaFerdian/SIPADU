@@ -45,6 +45,8 @@ Route::middleware('mahasiswa')->group(function () {
     Route::get('/mahasiswa/aduan', [AduanController::class, 'index'])->name('aduan.index');
     Route::get('/mahasiswa/aduan/create', [AduanController::class, 'create'])->name('aduan.create');
     Route::post('/mahasiswa/aduan', [AduanController::class, 'store'])->name('aduan.store');
+    // Lihat Aduan Publik (tanpa identitas)
+    Route::get('/mahasiswa/aduan-publik', [AduanController::class, 'publik'])->name('aduan.publik');
     Route::delete('/mahasiswa/aduan/{id}', [AduanController::class, 'destroy'])->name('aduan.destroy');
 });
 
