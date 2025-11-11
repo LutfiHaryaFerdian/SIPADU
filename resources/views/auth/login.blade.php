@@ -33,7 +33,8 @@
             .btn-theme:hover { background-color: #b02a37; }
         @elseif($role === 'mahasiswa')
             body {
-                background-image: url('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1920&q=80');
+                background-image: url('{{ asset("images/mahasiswa.jpeg") }}');
+
             }
             .overlay { background: rgba(13, 110, 253, 0.4); } /* biru transparan */
             .theme-color { color: #0d6efd; }
