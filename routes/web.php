@@ -61,4 +61,9 @@ Route::middleware('pic')->group(function () {
     Route::get('/pic/aduan', [PicController::class, 'indexAduan'])->name('pic.aduan.index');
     Route::get('/pic/aduan/{id}/tindaklanjut', [PicController::class, 'tindakLanjutForm'])->name('pic.tindaklanjut.form');
     Route::post('/pic/aduan/{id}/tindaklanjut', [PicController::class, 'tindakLanjutStore'])->name('pic.tindaklanjut.store');
+    Route::get('/pic/aduan/{id}/view', [PicController::class, 'viewTindakLanjut'])->name('pic.tindaklanjut.view');
+    Route::get('/pic/aduan/{id}/edit-dikerjakan', [PicController::class, 'editCatatanDikerjakan'])->name('pic.catatan.edit-dikerjakan');
+    Route::put('/pic/aduan/{id}/update-dikerjakan', [PicController::class, 'updateCatatanDikerjakan'])->name('pic.catatan.update-dikerjakan');
+    Route::get('/pic/aduan/{id}/edit-selesai', [PicController::class, 'editCatatanSelesai'])->name('pic.catatan.edit-selesai');
+    Route::put('/pic/aduan/{id}/update-selesai', [PicController::class, 'updateCatatanSelesai'])->name('pic.catatan.update-selesai');
 });
