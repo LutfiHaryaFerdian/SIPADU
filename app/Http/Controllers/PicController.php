@@ -13,17 +13,34 @@ class PicController extends Controller
     {
         $pic = session('pic');
 
-        // Statistik ringkasan
+        // Statistik ringkasan - hitung berdasarkan status terbaru dari setiap aduan
         $totalTugas = DB::table('penugasan')->where('id_pic', $pic->id)->count();
-        $aduanSelesai = DB::table('tindak_lanjut')
+        
+        // Ambil semua aduan yang ditugaskan ke PIC ini
+        $aduanIds = DB::table('penugasan')
             ->where('id_pic', $pic->id)
-            ->where('status', 'Selesai')
-            ->count();
+            ->pluck('id_aduan')
+            ->toArray();
 
-        $aduanProses = DB::table('tindak_lanjut')
-            ->where('id_pic', $pic->id)
-            ->where('status', 'Sedang Dikerjakan')
-            ->count();
+        // Hitung status terbaru untuk setiap aduan
+        $aduanSelesai = 0;
+        $aduanProses = 0;
+
+        foreach ($aduanIds as $aduanId) {
+            $tindakLanjutTerbaru = DB::table('tindak_lanjut')
+                ->where('id_aduan', $aduanId)
+                ->where('id_pic', $pic->id)
+                ->orderByDesc('created_at')
+                ->first();
+
+            if ($tindakLanjutTerbaru) {
+                if ($tindakLanjutTerbaru->status === 'Selesai') {
+                    $aduanSelesai++;
+                } elseif ($tindakLanjutTerbaru->status === 'Sedang Dikerjakan') {
+                    $aduanProses++;
+                }
+            }
+        }
 
         // Ambil 5 aduan terbaru
         $aduanTerbaru = DB::table('aduan')
@@ -54,6 +71,18 @@ class PicController extends Controller
             ->where('penugasan.id_pic', $pic->id)
             ->orderByDesc('aduan.created_at')
             ->get();
+
+        // Tambahkan status terbaru dari tindak_lanjut untuk setiap aduan
+        $aduan = $aduan->map(function($item) use ($pic) {
+            $tindakLanjutTerbaru = DB::table('tindak_lanjut')
+                ->where('id_aduan', $item->id)
+                ->where('id_pic', $pic->id)
+                ->orderByDesc('created_at')
+                ->first();
+
+            $item->status_terbaru = $tindakLanjutTerbaru ? $tindakLanjutTerbaru->status : $item->status;
+            return $item;
+        });
 
         return view('pic.aduan_index', compact('aduan'));
     }
@@ -89,9 +118,11 @@ class PicController extends Controller
             'updated_at' => now(),
         ]);
 
-        // Jika status Selesai, ubah juga status aduan
+        // Update status aduan berdasarkan tindak lanjut
         if ($request->status === 'Selesai') {
             DB::table('aduan')->where('id', $id)->update(['status' => 'Selesai']);
+        } elseif ($request->status === 'Sedang Dikerjakan') {
+            DB::table('aduan')->where('id', $id)->update(['status' => 'Diproses']);
         }
 
         return redirect()->route('pic.aduan.index')->with('success', 'Tindak lanjut berhasil ditambahkan.');
