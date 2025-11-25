@@ -59,4 +59,16 @@ class AduanController extends Controller
 
         return back()->with('error', 'Aduan tidak ditemukan atau tidak bisa dihapus.');
     }
+
+    // Menampilkan aduan publik (tanpa identitas pelapor)
+    public function publik()
+    {
+        // Ambil aduan publik (misal: semua aduan, atau filter tertentu jika ada kolom khusus)
+        $aduan = DB::table('aduan')
+            ->select('judul', 'kategori', 'status', 'nomor_tiket', 'created_at')
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('aduan.publik', compact('aduan'));
+    }
 }

@@ -13,7 +13,7 @@
         <p class="text-muted">Catat progres dan ubah status penyelesaian aduan mahasiswa.</p>
     </div>
 
-    <div class="card shadow-lg border-0 mx-auto" style="max-width: 650px;">
+    <div class="card shadow-lg border-0 mx-auto" style="max-width: 700px;">
         <div class="card-header bg-warning text-dark text-center fw-semibold">
             <i class="bi bi-clipboard-check me-2"></i>Formulir Tindak Lanjut
         </div>
@@ -24,21 +24,45 @@
                 <p class="mb-1"><strong>Kategori:</strong> {{ $aduan->kategori }}</p>
             </div>
 
+            {{-- Tampilkan catatan sebelumnya jika ada --}}
+            @if($tindakLanjutTerbaru)
+                <div class="mb-4 p-3 bg-light border-start border-4 border-info rounded">
+                    <h6 class="fw-semibold mb-2"><i class="bi bi-info-circle me-2"></i>Catatan Terbaru</h6>
+                    <p class="mb-1"><strong>Status:</strong> 
+                        <span class="badge {{ $tindakLanjutTerbaru->status === 'Sedang Dikerjakan' ? 'bg-warning text-dark' : 'bg-success' }}">
+                            {{ $tindakLanjutTerbaru->status }}
+                        </span>
+                    </p>
+                    <p class="mb-2"><strong>Catatan:</strong></p>
+                    <div class="p-2 bg-white border rounded">{{ $tindakLanjutTerbaru->catatan }}</div>
+                </div>
+            @endif
+
             {{-- Form --}}
             <form method="POST" action="{{ route('pic.tindaklanjut.store', $aduan->id) }}">
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Catatan Tindak Lanjut</label>
-                    <textarea name="catatan" class="form-control shadow-sm" rows="5" 
-                              placeholder="Tuliskan hasil atau progres tindak lanjut..." required></textarea>
+                    <label class="form-label fw-semibold">Catatan Tindak Lanjut Sedang Dikerjakan</label>
+                    <textarea name="catatan" class="form-control shadow-sm" rows="4" 
+                              placeholder="Tuliskan progres atau hasil tindak lanjut saat ini..." required></textarea>
+                    <small class="text-muted">Catatan ini masih dapat diubah sebelum menandai selesai.</small>
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label fw-semibold">Status</label>
                     <select name="status" class="form-select shadow-sm" required>
+                        <option value="">-- Pilih Status --</option>
                         <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
                         <option value="Selesai">Selesai</option>
                     </select>
+                </div>
+
+                {{-- Catatan Selesai hanya jika memilih Selesai --}}
+                <div class="mb-4" id="catatanSelesaiDiv" style="display: none;">
+                    <label class="form-label fw-semibold">Catatan Penyelesaian</label>
+                    <textarea id="catatanSelesai" name="catatan_selesai" class="form-control shadow-sm" rows="4" 
+                              placeholder="Tuliskan ringkasan hasil penyelesaian..."></textarea>
+                    <small class="text-muted">Catatan ini akan disimpan setelah status diubah menjadi selesai.</small>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center">
@@ -53,6 +77,19 @@
         </div>
     </div>
 </div>
+
+<script>
+document.querySelector('select[name="status"]').addEventListener('change', function() {
+    const catatanSelesaiDiv = document.getElementById('catatanSelesaiDiv');
+    if (this.value === 'Selesai') {
+        catatanSelesaiDiv.style.display = 'block';
+        document.getElementById('catatanSelesai').required = true;
+    } else {
+        catatanSelesaiDiv.style.display = 'none';
+        document.getElementById('catatanSelesai').required = false;
+    }
+});
+</script>
 
 <style>
 .card:hover {

@@ -3,22 +3,6 @@
 @section('title', 'Dashboard PIC Unit')
 
 @section('content')
-@php
-    use Illuminate\Support\Facades\DB;
-    $id_pic = session('pic')->id;
-
-    $aduanDitugaskan = DB::table('penugasan')->where('id_pic', $id_pic)->count();
-    $aduanSelesai = DB::table('tindak_lanjut')
-        ->where('id_pic', $id_pic)
-        ->where('status', 'Selesai')
-        ->count();
-
-    $aduanProses = DB::table('tindak_lanjut')
-        ->where('id_pic', $id_pic)
-        ->where('status', 'Sedang Dikerjakan')
-        ->count();
-@endphp
-
 <div class="container my-5">
     <!-- Header -->
     <div class="text-center mb-5">
@@ -38,7 +22,7 @@
                     <i class="bi bi-briefcase-fill display-5 text-dark me-3"></i>
                     <div>
                         <h6 class="fw-semibold mb-0">Total Tugas</h6>
-                        <h3 class="fw-bold mb-0">{{ $aduanDitugaskan }}</h3>
+                        <h3 class="fw-bold mb-0">{{ $totalTugas }}</h3>
                     </div>
                 </div>
             </div>
@@ -74,12 +58,8 @@
         </div>
         <div class="card-body p-0">
             @php
-                $aduanTerbaru = DB::table('aduan')
-                    ->join('penugasan', 'aduan.id', '=', 'penugasan.id_aduan')
-                    ->where('penugasan.id_pic', $id_pic)
-                    ->orderBy('aduan.created_at', 'desc')
-                    ->limit(5)
-                    ->get();
+                use Illuminate\Support\Facades\DB;
+                $id_pic = session('pic')->id;
             @endphp
 
             @if($aduanTerbaru->isEmpty())
@@ -99,17 +79,30 @@
                         </thead>
                         <tbody>
                             @foreach($aduanTerbaru as $a)
+                            @php
+                                // Get status dari tindak_lanjut terbaru
+                                $tindakLanjutTerbaru = DB::table('tindak_lanjut')
+                                    ->where('id_aduan', $a->id)
+                                    ->where('id_pic', $id_pic)
+                                    ->orderBy('created_at', 'desc')
+                                    ->first();
+                                
+                                $statusDisplay = $a->status;
+                                if ($tindakLanjutTerbaru) {
+                                    $statusDisplay = $tindakLanjutTerbaru->status;
+                                }
+                            @endphp
                             <tr>
                                 <td>{{ $a->judul }}</td>
                                 <td>{{ $a->kategori }}</td>
                                 <td>
-                                    @if($a->status == 'Menunggu')
+                                    @if($statusDisplay == 'Menunggu')
                                         <span class="badge bg-secondary">
                                             <i class="bi bi-hourglass me-1"></i>Menunggu
                                         </span>
-                                    @elseif($a->status == 'Diproses')
+                                    @elseif($statusDisplay == 'Diproses' || $statusDisplay == 'Sedang Dikerjakan')
                                         <span class="badge bg-warning text-dark">
-                                            <i class="bi bi-gear-fill me-1"></i>Diproses
+                                            <i class="bi bi-gear-fill me-1"></i>Sedang Dikerjakan
                                         </span>
                                     @else
                                         <span class="badge bg-success">

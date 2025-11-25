@@ -54,20 +54,27 @@
                                     </td>
                                     <td>{{ $a->kategori }}</td>
                                     <td>
-                                        @if($a->status === 'Menunggu')
+                                        @if($a->status_terbaru === 'Menunggu')
                                             <span class="badge bg-secondary"><i class="bi bi-hourglass me-1"></i>Menunggu</span>
-                                        @elseif($a->status === 'Diproses')
-                                            <span class="badge bg-warning text-dark"><i class="bi bi-gear-fill me-1"></i>Diproses</span>
+                                        @elseif($a->status_terbaru === 'Diproses' || $a->status_terbaru === 'Sedang Dikerjakan')
+                                            <span class="badge bg-warning text-dark"><i class="bi bi-gear-fill me-1"></i>Sedang Dikerjakan</span>
                                         @else
                                             <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Selesai</span>
                                         @endif
                                     </td>
                                     <td>{{ $a->catatan_admin ?? '-' }}</td>
                                     <td class="text-center">
-                                        <a href="{{ route('pic.tindaklanjut.form', $a->id) }}" 
-                                           class="btn btn-sm btn-warning text-white shadow-sm">
-                                            <i class="bi bi-pencil-square me-1"></i>Tindak Lanjut
-                                        </a>
+                                        @if($a->status_terbaru !== 'Selesai')
+                                            <a href="{{ route('pic.tindaklanjut.form', $a->id) }}" 
+                                               class="btn btn-sm btn-warning text-white shadow-sm">
+                                                <i class="bi bi-pencil-square me-1"></i>Tindak Lanjut
+                                            </a>
+                                        @else
+                                            <a href="{{ route('pic.tindaklanjut.view', $a->id) }}" 
+                                               class="btn btn-sm btn-success text-white shadow-sm">
+                                                <i class="bi bi-eye me-1"></i>Lihat Tindak Lanjut
+                                            </a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
