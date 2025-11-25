@@ -70,9 +70,10 @@
                                                 <i class="bi bi-pencil-square me-1"></i>Tindak Lanjut
                                             </a>
                                         @else
-                                            <span class="badge bg-success p-2">
-                                                <i class="bi bi-check-circle-fill me-1"></i>Sudah Selesai
-                                            </span>
+                                            <a href="{{ route('pic.tindaklanjut.view', $a->id) }}" 
+                                               class="btn btn-sm btn-success text-white shadow-sm">
+                                                <i class="bi bi-eye me-1"></i>Lihat Tindak Lanjut
+                                            </a>
                                         @endif
                                     </td>
                                 </tr>
