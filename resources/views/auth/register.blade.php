@@ -85,7 +85,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('register.store') }}">
+        <form method="POST" action="{{ route('register.sendOtp') }}">
             @csrf
             <div class="mb-3">
                 <label class="form-label fw-semibold">Nama Lengkap</label>

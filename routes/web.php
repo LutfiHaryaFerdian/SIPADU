@@ -12,7 +12,9 @@ Route::get('/', function () {
 });
 
 Route::get('/register', [RegisterController::class, 'showForm'])->name('register.form');
-Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+Route::post('/register/send-otp', [RegisterController::class, 'sendOtp'])->name('register.sendOtp');
+Route::get('/register/verify', [RegisterController::class, 'verifyForm'])->name('register.verifyForm');
+Route::post('/register/verify', [RegisterController::class, 'verifyOtp'])->name('register.verifyOtp');
 
 // ===================================================
 // AUTHENTICATION (Login & Logout per Role)
