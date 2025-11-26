@@ -123,6 +123,11 @@
                 <a href="/register" class="text-decoration-none fw-semibold text-primary">Daftar Sekarang</a>
             </p>
         </div>
+        <div class="text-center mt-3 small">
+            <p class="mb-0">Lupa password?
+                <a href="{{ route('forgot.email') }}" class="text-decoration-none fw-semibold text-primary">Ganti Password</a>
+            </p>
+        </div>
         @elseif($role === 'admin')
         <div class="text-center mt-3 small">
             <p class="mb-0">Hubungi PIC Unit untuk membuat akun Admin.</p>

@@ -6,10 +6,24 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PicController;
 use App\Http\Controllers\AduanController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ForgotPasswordController;
+
 
 Route::get('/', function () {
     return view('welcome');
 });
+// ==========================
+// FORGOT PASSWORD + OTP
+// ==========================
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showEmailForm'])->name('forgot.email');
+Route::post('/forgot-password/send-otp', [ForgotPasswordController::class, 'sendOtp'])->name('forgot.sendOtp');
+
+Route::get('/forgot-password/verify', [ForgotPasswordController::class, 'showVerifyForm'])->name('forgot.verifyForm');
+Route::post('/forgot-password/verify', [ForgotPasswordController::class, 'verifyOtp'])->name('forgot.verifyOtp');
+
+Route::get('/forgot-password/reset', [ForgotPasswordController::class, 'showResetForm'])->name('forgot.resetForm');
+Route::post('/forgot-password/reset', [ForgotPasswordController::class, 'resetPassword'])->name('forgot.resetPassword');
+
 
 Route::get('/register', [RegisterController::class, 'showForm'])->name('register.form');
 Route::post('/register/send-otp', [RegisterController::class, 'sendOtp'])->name('register.sendOtp');
