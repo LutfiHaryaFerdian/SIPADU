@@ -25,7 +25,7 @@
 
         .hero {
             min-height: 100vh;
-            background: url('{{ asset("images/unila.jpg") }}') center/cover no-repeat;
+            background: url('{{ asset("images/unilahd.jpg") }}') center/cover no-repeat;
             position: relative;
         }
         .hero::before {
