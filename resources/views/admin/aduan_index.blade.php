@@ -82,13 +82,49 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($a->foto_url)
-                                            <img src="{{ $a->foto_url }}" alt="Foto Aduan"
-                                                class="img-fluid rounded shadow-sm"
-                                                style="width: 90px; height: 90px; object-fit: cover;">
-                                        @else
-                                            <span class="text-muted">Tidak ada foto</span>
-                                        @endif
+                                        <div class="d-flex gap-2 align-items-center flex-wrap">
+                                            <!-- Foto KTM -->
+                                            @if($a->foto_ktm)
+                                                <div class="position-relative d-inline-block">
+                                                    <img src="{{ $a->foto_ktm }}" 
+                                                         class="img-thumbnail" 
+                                                         style="width: 70px; height: 70px; object-fit: cover;">
+                                                    <div class="position-absolute top-0 end-0" style="background: white; border-radius: 50%; padding: 2px; margin: -8px -8px 0 0;">
+                                                        <x-photo-viewer 
+                                                            :fotoUrl="$a->foto_ktm" 
+                                                            label="Foto KTM" />
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <span class="text-muted fs-6">-</span>
+                                            @endif
+
+                                            <!-- Foto Bukti (Multiple) -->
+                                            @php
+                                                $fotoBuktiArray = is_string($a->foto_bukti) ? json_decode($a->foto_bukti, true) : ($a->foto_bukti ?? []);
+                                                // Fallback untuk data lama
+                                                if (empty($fotoBuktiArray) && isset($a->foto_url)) {
+                                                    $fotoBuktiArray = [$a->foto_url];
+                                                }
+                                            @endphp
+                                            @if(!empty($fotoBuktiArray) && count($fotoBuktiArray) > 0)
+                                                <div class="position-relative d-inline-block">
+                                                    <img src="{{ $fotoBuktiArray[0] }}" 
+                                                         class="img-thumbnail" 
+                                                         style="width: 70px; height: 70px; object-fit: cover;">
+                                                    @if(count($fotoBuktiArray) > 1)
+                                                        <span class="position-absolute bottom-0 end-0 badge bg-dark rounded-circle" style="font-size: 0.7rem; padding: 2px 4px;">+{{ count($fotoBuktiArray) - 1 }}</span>
+                                                    @endif
+                                                    <div class="position-absolute top-0 end-0" style="background: white; border-radius: 50%; padding: 2px; margin: -8px -8px 0 0;">
+                                                        <x-photo-gallery 
+                                                            :fotoBuktiArray="$fotoBuktiArray" 
+                                                            label="Foto Bukti Aduan" />
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <span class="text-muted fs-6">-</span>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td class="font-monospace">{{ $a->nomor_tiket }}</td>
                                     <td class="text-center">

@@ -28,38 +28,52 @@ class AduanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-        'judul' => 'required|string|max:255',
-        'kategori' => 'required|string',
-        'deskripsi' => 'required|string',
-        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validasi foto
-    ]);
-
-    $fotoUrl = null;
-
-    if ($request->hasFile('foto')) {
-        // Upload ke Cloudinary
-        $uploadedFile = Cloudinary::upload($request->file('foto')->getRealPath(), [
-            'folder' => 'sipadu/aduan'
+            'judul' => 'required|string|max:255',
+            'kategori' => 'required|string',
+            'deskripsi' => 'required|string',
+            'foto_ktm' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_bukti' => 'required|array|min:1|max:5',
+            'foto_bukti.*' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'disclaimer' => 'required|accepted',
         ]);
 
-        $fotoUrl = $uploadedFile->getSecurePath();
-    }
+        $fotoKtmUrl = null;
+        $fotoBuktiUrls = [];
 
-    DB::table('aduan')->insert([
-        'id' => Str::uuid(),
-        'id_mahasiswa' => session('mahasiswa')->id,
-        'judul' => $request->judul,
-        'kategori' => $request->kategori,
-        'deskripsi' => $request->deskripsi,
-        'foto_url' => $fotoUrl,  // simpan url dari cloudinary
-        'status' => 'Menunggu',
-        'nomor_tiket' => strtoupper(Str::random(8)),
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
+        // Upload foto KTM
+        if ($request->hasFile('foto_ktm')) {
+            $uploadedFile = Cloudinary::upload($request->file('foto_ktm')->getRealPath(), [
+                'folder' => 'sipadu/aduan/ktm'
+            ]);
+            $fotoKtmUrl = $uploadedFile->getSecurePath();
+        }
 
-    return redirect()->route('aduan.index')
-        ->with('success', 'Aduan berhasil dikirim!');
+        // Upload multiple foto bukti (max 5)
+        if ($request->hasFile('foto_bukti')) {
+            foreach ($request->file('foto_bukti') as $fotoBukti) {
+                $uploadedFile = Cloudinary::upload($fotoBukti->getRealPath(), [
+                    'folder' => 'sipadu/aduan/bukti'
+                ]);
+                $fotoBuktiUrls[] = $uploadedFile->getSecurePath();
+            }
+        }
+
+        DB::table('aduan')->insert([
+            'id' => Str::uuid(),
+            'id_mahasiswa' => session('mahasiswa')->id,
+            'judul' => $request->judul,
+            'kategori' => $request->kategori,
+            'deskripsi' => $request->deskripsi,
+            'foto_ktm' => $fotoKtmUrl,
+            'foto_bukti' => json_encode($fotoBuktiUrls),
+            'status' => 'Menunggu',
+            'nomor_tiket' => strtoupper(Str::random(8)),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('aduan.index')
+            ->with('success', 'Aduan berhasil dikirim!');
     }
 
     
@@ -93,7 +107,7 @@ class AduanController extends Controller
     public function publicDetail($id)
     {
         $aduan = DB::table('aduan')
-            ->select('id','judul','kategori','status','nomor_tiket','created_at','deskripsi','foto_url')
+            ->select('id','judul','kategori','status','nomor_tiket','created_at','deskripsi','foto_ktm','foto_bukti','foto_url','id_mahasiswa')
             ->where('id', $id)
             ->first();
 
@@ -109,6 +123,22 @@ class AduanController extends Controller
             ->orderByDesc('tindak_lanjut.created_at')
             ->get();
 
-        return view('aduan.detail', compact('aduan', 'catatanPic'));
+        // Tentukan user type
+        $userType = 'public'; // Default publik (tidak login)
+        
+        if (session('mahasiswa')) {
+            // Cek apakah ini pemilik aduan
+            if (session('mahasiswa')->id == $aduan->id_mahasiswa) {
+                $userType = 'mahasiswa_owner';
+            } else {
+                $userType = 'mahasiswa';
+            }
+        } elseif (session('admin')) {
+            $userType = 'admin';
+        } elseif (session('pic')) {
+            $userType = 'pic';
+        }
+
+        return view('aduan.detail', compact('aduan', 'catatanPic', 'userType'));
     }
 }

@@ -11,7 +11,7 @@ class Aduan extends Model
 
     protected $table = 'aduan';
     protected $fillable = [
-        'id_mahasiswa', 'judul', 'deskripsi', 'kategori', 'status', 'nomor_tiket'
+        'id_mahasiswa', 'judul', 'deskripsi', 'kategori', 'status', 'nomor_tiket', 'foto_ktm', 'foto_bukti', 'foto_bukti_old'
     ];
 
     public function mahasiswa() {

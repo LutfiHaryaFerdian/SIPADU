@@ -57,12 +57,102 @@
                         @endif
                     </div>
 
-                    <!-- @if($aduan->foto_url)
-                        <div class="mb-3">
-                            <h6 class="fw-semibold">Lampiran Foto</h6>
-                            <img src="{{ $aduan->foto_url }}" alt="Lampiran" class="img-fluid rounded shadow-sm" />
+                    <!-- Lampiran Foto - Conditional Display -->
+                    @if($userType !== 'public')
+                        @php
+                            $fotoBuktiArray = is_string($aduan->foto_bukti) ? json_decode($aduan->foto_bukti, true) : ($aduan->foto_bukti ?? []);
+                            // Fallback untuk data lama
+                            if (empty($fotoBuktiArray) && isset($aduan->foto_url)) {
+                                $fotoBuktiArray = [$aduan->foto_url];
+                            }
+                        @endphp
+                        
+                        <!-- Mahasiswa Owner & Admin: Lihat KTM + Bukti -->
+                        @if($userType === 'mahasiswa_owner' || $userType === 'admin')
+                            @if($aduan->foto_ktm || !empty($fotoBuktiArray))
+                                <div class="mb-3">
+                                    <h6 class="fw-semibold">Lampiran Bukti</h6>
+                                    <div class="row g-3">
+                                        <!-- Foto KTM -->
+                                        @if($aduan->foto_ktm)
+                                            <div class="col-md-6">
+                                                <div class="card border shadow-sm">
+                                                    <div class="card-body p-0 position-relative">
+                                                        <img src="{{ $aduan->foto_ktm }}" alt="Foto KTM" class="img-fluid rounded" style="width: 100%; height: 250px; object-fit: cover;">
+                                                        <div class="position-absolute top-2 end-2" style="background: white; border-radius: 50%; padding: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                                                            <x-photo-viewer 
+                                                                :fotoUrl="$aduan->foto_ktm" 
+                                                                label="Foto KTM" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer bg-light">
+                                                        <small class="text-muted">Foto KTM</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        <!-- Foto Bukti (Multiple/Gallery) -->
+                                        @if(!empty($fotoBuktiArray) && count($fotoBuktiArray) > 0)
+                                            <div class="col-md-6">
+                                                <div class="card border shadow-sm">
+                                                    <div class="card-body p-0 position-relative">
+                                                        <img src="{{ $fotoBuktiArray[0] }}" alt="Foto Bukti" class="img-fluid rounded" style="width: 100%; height: 250px; object-fit: cover;">
+                                                        @if(count($fotoBuktiArray) > 1)
+                                                            <span class="position-absolute bottom-2 end-2 badge bg-dark" style="z-index: 10;">+{{ count($fotoBuktiArray) - 1 }}</span>
+                                                        @endif
+                                                        <div class="position-absolute top-2 end-2" style="background: white; border-radius: 50%; padding: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                                                            <x-photo-gallery 
+                                                                :fotoBuktiArray="$fotoBuktiArray" 
+                                                                label="Foto Bukti Aduan" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer bg-light">
+                                                        <small class="text-muted">Foto Bukti Aduan ({{ count($fotoBuktiArray) }} foto)</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endif
+                        
+                        <!-- PIC: Lihat Bukti Only, KTM Disabled -->
+                        @elseif($userType === 'pic')
+                            @if(!empty($fotoBuktiArray) && count($fotoBuktiArray) > 0)
+                                <div class="mb-3">
+                                    <h6 class="fw-semibold">Lampiran Bukti</h6>
+                                    <div class="row g-3">
+                                        <!-- Foto Bukti (Multiple/Gallery) -->
+                                        <div class="col-md-6">
+                                            <div class="card border shadow-sm">
+                                                <div class="card-body p-0 position-relative">
+                                                    <img src="{{ $fotoBuktiArray[0] }}" alt="Foto Bukti" class="img-fluid rounded" style="width: 100%; height: 250px; object-fit: cover;">
+                                                    @if(count($fotoBuktiArray) > 1)
+                                                        <span class="position-absolute bottom-2 end-2 badge bg-dark" style="z-index: 10;">+{{ count($fotoBuktiArray) - 1 }}</span>
+                                                    @endif
+                                                    <div class="position-absolute top-2 end-2" style="background: white; border-radius: 50%; padding: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                                                        <x-photo-gallery 
+                                                            :fotoBuktiArray="$fotoBuktiArray" 
+                                                            label="Foto Bukti Aduan" />
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer bg-light">
+                                                    <small class="text-muted">Foto Bukti Aduan ({{ count($fotoBuktiArray) }} foto)</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+                        @endif
+                    @else
+                        <!-- Public View: Tidak ada foto -->
+                        <div class="alert alert-info mt-3" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            <strong>Catatan Privasi:</strong> Foto dan identitas pelapor bersifat privasi. Hanya informasi dan status aduan yang ditampilkan di sini untuk verifikasi keabsahan aduan.
                         </div>
-                    @endif -->
+                    @endif
 
                 </div>
                 <div class="col-md-4">
