@@ -82,10 +82,33 @@ class AduanController extends Controller
     {
         // Ambil aduan publik (misal: semua aduan, atau filter tertentu jika ada kolom khusus)
         $aduan = DB::table('aduan')
-            ->select('judul', 'kategori', 'status', 'nomor_tiket', 'created_at')
+            ->select('id','judul', 'kategori', 'status', 'nomor_tiket', 'created_at')
             ->orderByDesc('created_at')
             ->get();
 
         return view('aduan.publik', compact('aduan'));
+    }
+
+    // 🔍 Detail aduan publik beserta catatan PIC
+    public function publicDetail($id)
+    {
+        $aduan = DB::table('aduan')
+            ->select('id','judul','kategori','status','nomor_tiket','created_at','deskripsi','foto_url')
+            ->where('id', $id)
+            ->first();
+
+        if (!$aduan) {
+            return back()->with('error', 'Aduan tidak ditemukan.');
+        }
+
+        // Ambil semua catatan tindak lanjut untuk aduan ini (dari semua PIC)
+        $catatanPic = DB::table('tindak_lanjut')
+            ->join('pic_units', 'tindak_lanjut.id_pic', '=', 'pic_units.id')
+            ->where('tindak_lanjut.id_aduan', $id)
+            ->select('tindak_lanjut.*', 'pic_units.nama_pic as pic_nama')
+            ->orderByDesc('tindak_lanjut.created_at')
+            ->get();
+
+        return view('aduan.detail', compact('aduan', 'catatanPic'));
     }
 }

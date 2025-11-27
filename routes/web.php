@@ -30,6 +30,9 @@ Route::post('/register/send-otp', [RegisterController::class, 'sendOtp'])->name(
 Route::get('/register/verify', [RegisterController::class, 'verifyForm'])->name('register.verifyForm');
 Route::post('/register/verify', [RegisterController::class, 'verifyOtp'])->name('register.verifyOtp');
 
+// Public aduan detail (accessible tanpa login)
+Route::get('/aduan-publik/{id}', [AduanController::class, 'publicDetail'])->name('aduan.publik.detail');
+
 // ===================================================
 // AUTHENTICATION (Login & Logout per Role)
 // ===================================================
