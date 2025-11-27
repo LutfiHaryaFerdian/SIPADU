@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class AduanController extends Controller
 {
@@ -27,25 +28,41 @@ class AduanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'judul' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'kategori' => 'required|string',
+        'judul' => 'required|string|max:255',
+        'kategori' => 'required|string',
+        'deskripsi' => 'required|string',
+        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validasi foto
+    ]);
+
+    $fotoUrl = null;
+
+    if ($request->hasFile('foto')) {
+        // Upload ke Cloudinary
+        $uploadedFile = Cloudinary::upload($request->file('foto')->getRealPath(), [
+            'folder' => 'sipadu/aduan'
         ]);
 
-        DB::table('aduan')->insert([
-            'id' => Str::uuid(),
-            'id_mahasiswa' => session('mahasiswa')->id,
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-            'kategori' => $request->kategori,
-            'status' => 'Menunggu',
-            'nomor_tiket' => strtoupper(Str::random(8)),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        return redirect('/mahasiswa/aduan')->with('success', 'Aduan berhasil dikirim.');
+        $fotoUrl = $uploadedFile->getSecurePath();
     }
+
+    DB::table('aduan')->insert([
+        'id' => Str::uuid(),
+        'id_mahasiswa' => session('mahasiswa')->id,
+        'judul' => $request->judul,
+        'kategori' => $request->kategori,
+        'deskripsi' => $request->deskripsi,
+        'foto_url' => $fotoUrl,  // simpan url dari cloudinary
+        'status' => 'Menunggu',
+        'nomor_tiket' => strtoupper(Str::random(8)),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    return redirect()->route('aduan.index')
+        ->with('success', 'Aduan berhasil dikirim!');
+    }
+
+    
 
     // ❌ Hapus aduan (oleh mahasiswa)
     public function destroy($id)

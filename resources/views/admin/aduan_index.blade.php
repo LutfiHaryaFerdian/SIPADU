@@ -52,6 +52,7 @@
                                 <th>Mahasiswa</th>
                                 <th>Kategori</th>
                                 <th>Status</th>
+                                <th>Foto</th>
                                 <th>Nomor Tiket</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
@@ -78,6 +79,15 @@
                                             <span class="badge bg-success">
                                                 <i class="bi bi-check-circle-fill me-1"></i>Selesai
                                             </span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($a->foto_url)
+                                            <img src="{{ $a->foto_url }}" alt="Foto Aduan"
+                                                class="img-fluid rounded shadow-sm"
+                                                style="width: 90px; height: 90px; object-fit: cover;">
+                                        @else
+                                            <span class="text-muted">Tidak ada foto</span>
                                         @endif
                                     </td>
                                     <td class="font-monospace">{{ $a->nomor_tiket }}</td>
