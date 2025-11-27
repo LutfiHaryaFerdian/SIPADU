@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Aduan')
+@section('title', 'SIPADU - Manajemen Aduan')
 
 @section('content')
 <div class="container my-5">

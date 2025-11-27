@@ -1,6 +1,6 @@
 @extends('layouts.pic')
 
-@section('title', 'Edit Catatan Penyelesaian')
+@section('title', 'SIPADU - Edit Catatan Penyelesaian')
 
 @section('content')
 <div class="container my-5">

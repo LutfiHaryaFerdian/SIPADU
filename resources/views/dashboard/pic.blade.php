@@ -1,6 +1,6 @@
 @extends('layouts.pic')
 
-@section('title', 'Dashboard PIC Unit')
+@section('title', 'SIPADU - Dashboard PIC Unit')
 
 @section('content')
 <div class="container my-5">

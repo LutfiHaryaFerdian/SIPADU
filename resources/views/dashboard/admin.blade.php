@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard Admin')
+@section('title', 'SIPADU - Dashboard Admin')
 
 @section('content')
 @php

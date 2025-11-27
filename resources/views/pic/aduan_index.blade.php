@@ -1,6 +1,6 @@
 @extends('layouts.pic')
 
-@section('title', 'Aduan Ditugaskan')
+@section('title', 'SIPADU - Aduan Ditugaskan')
 
 @section('content')
 <div class="container my-5">

@@ -1,6 +1,6 @@
 @extends('layouts.mahasiswa')
 
-@section('title', 'Dashboard Mahasiswa')
+@section('title', 'SIPADU - Dashboard Mahasiswa')
 
 @section('content')
 @php

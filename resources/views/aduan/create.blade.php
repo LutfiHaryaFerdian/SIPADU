@@ -1,6 +1,6 @@
 @extends('layouts.mahasiswa')
 
-@section('title', 'Buat Aduan Baru')
+@section('title', 'SIPADU - Buat Aduan Baru')
 
 @section('content')
 <div class="container my-5">
