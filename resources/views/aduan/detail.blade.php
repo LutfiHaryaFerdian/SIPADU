@@ -1,15 +1,15 @@
-@extends('layouts.app')
+@extends('layouts.mahasiswa')
 
 @section('title', 'SIPADU - Detail Aduan Publik')
 
 @section('content')
-<div class="container my-5">
+<div class="container my-3">
     <div class="card shadow border-0">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white" style="padding-top: 1cm; padding-bottom: 1cm;">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <h4 class="mb-0">{{ $aduan->judul }}</h4>
-                    <small class="text-white-50">Nomor Tiket: <strong>{{ $aduan->nomor_tiket }}</strong></small>
+                    <h4 class="mb-10">{{ $aduan->judul }}</h4>
+                    <small class="text-white-75">Nomor Tiket: <strong>{{ $aduan->nomor_tiket }}</strong></small>
                 </div>
                 <div class="text-end">
                     @if($aduan->status === 'Menunggu')
@@ -26,37 +26,11 @@
         <div class="card-body">
             <div class="row g-4">
                 <div class="col-md-8">
-                    <p class="mb-1"><strong>Kategori:</strong> {{ $aduan->kategori }}</p>
-                    <hr>
+                    <p class="mb-0"><strong>Kategori:</strong> {{ $aduan->kategori }}</p><br>
                     <h6 class="fw-semibold">Deskripsi Aduan</h6>
-                    <div class="p-3 bg-light border rounded mb-3">{{ $aduan->deskripsi }}</div>
-
-                    @if($aduan->foto_url)
-                        <div class="mb-3">
-                            <h6 class="fw-semibold">Lampiran Foto</h6>
-                            <img src="{{ $aduan->foto_url }}" alt="Lampiran" class="img-fluid rounded shadow-sm" />
-                        </div>
-                    @endif
-
-                </div>
-                <div class="col-md-4">
-                    <div class="p-3 bg-white border rounded mb-3">
-                        <h6 class="fw-semibold">Informasi Aduan</h6>
-                        <p class="mb-1"><strong>Nomor Tiket:</strong><br>{{ $aduan->nomor_tiket }}</p>
-                        <p class="mb-1"><strong>Tanggal Laporan:</strong><br>{{ \Carbon\Carbon::parse($aduan->created_at)->format('d M Y H:i') }}</p>
-                        <p class="mb-1"><strong>Status:</strong><br>
-                            @if($aduan->status === 'Menunggu')
-                                <span class="badge bg-secondary">Menunggu</span>
-                            @elseif($aduan->status === 'Diproses' || $aduan->status === 'Sedang Dikerjakan')
-                                <span class="badge bg-warning text-dark">Sedang Dikerjakan</span>
-                            @else
-                                <span class="badge bg-success">Selesai</span>
-                            @endif
-                        </p>
-                    </div>
-
+                    <div class="p-3 bg-light border rounded">{{ $aduan->deskripsi }}</div><br>
+                    <h6 class="fw-semibold">Catatan PIC Unit</h6>
                     <div class="p-3 bg-white border rounded">
-                        <h6 class="fw-semibold">Catatan PIC</h6>
                         @if($catatanPic->isEmpty())
                             <div class="text-muted small">Belum ada catatan dari PIC.</div>
                         @else
@@ -81,6 +55,30 @@
                                 @endforeach
                             </ul>
                         @endif
+                    </div>
+
+                    <!-- @if($aduan->foto_url)
+                        <div class="mb-3">
+                            <h6 class="fw-semibold">Lampiran Foto</h6>
+                            <img src="{{ $aduan->foto_url }}" alt="Lampiran" class="img-fluid rounded shadow-sm" />
+                        </div>
+                    @endif -->
+
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 bg-white border rounded mb-3">
+                        <h6 class="fw-semibold">Informasi Aduan</h6>
+                        <p class="mb-1"><strong>Nomor Tiket:</strong><br>{{ $aduan->nomor_tiket }}</p>
+                        <p class="mb-1"><strong>Tanggal Laporan:</strong><br>{{ \Carbon\Carbon::parse($aduan->created_at)->format('d M Y H:i') }}</p>
+                        <p class="mb-1"><strong>Status:</strong><br>
+                            @if($aduan->status === 'Menunggu')
+                                <span class="badge bg-secondary">Menunggu</span>
+                            @elseif($aduan->status === 'Diproses' || $aduan->status === 'Sedang Dikerjakan')
+                                <span class="badge bg-warning text-dark">Sedang Dikerjakan</span>
+                            @else
+                                <span class="badge bg-success">Selesai</span>
+                            @endif
+                        </p>
                     </div>
                 </div>
             </div>
