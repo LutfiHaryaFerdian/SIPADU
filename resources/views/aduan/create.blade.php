@@ -18,7 +18,7 @@
             <i class="bi bi-pencil-square me-2"></i> Form Pengaduan Mahasiswa
         </div>
         <div class="card-body p-4">
-            <form method="POST" action="{{ route('aduan.store') }}">
+                <form method="POST" action="{{ route('aduan.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
                     <label class="form-label fw-semibold">Judul Aduan</label>
@@ -33,6 +33,11 @@
                 <div class="mb-4">
                     <label class="form-label fw-semibold">Deskripsi</label>
                     <textarea name="deskripsi" rows="5" class="form-control" placeholder="Tuliskan deskripsi lengkap aduan Anda..." required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Bukti Foto (opsional)</label>
+                    <input type="file" name="foto" class="form-control" accept="image/*">
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center">

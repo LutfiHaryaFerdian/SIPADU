@@ -21,7 +21,7 @@
         </div>
     @endif
 
-    {{-- Tabel Aduan --}}
+    {{-- Jika tidak ada aduan --}}
     @if($aduan->isEmpty())
         <div class="alert alert-warning text-center shadow-sm">
             <i class="bi bi-info-circle-fill me-2"></i>Belum ada aduan yang ditugaskan.
@@ -37,6 +37,7 @@
                         <thead class="table-warning text-dark">
                             <tr>
                                 <th>Judul</th>
+                                <th>Foto</th>
                                 <th>Mahasiswa</th>
                                 <th>Kategori</th>
                                 <th>Status</th>
@@ -44,41 +45,61 @@
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             @foreach($aduan as $a)
                                 <tr>
                                     <td class="fw-semibold">{{ $a->judul }}</td>
+
+                                    {{-- FOTO --}}
                                     <td>
-                                        <strong>{{ $a->nama_mahasiswa }}</strong><br>
-                                        <small class="text-muted">({{ $a->npm }})</small>
-                                    </td>
-                                    <td>{{ $a->kategori }}</td>
-                                    <td>
-                                        @if($a->status_terbaru === 'Menunggu')
-                                            <span class="badge bg-secondary"><i class="bi bi-hourglass me-1"></i>Menunggu</span>
-                                        @elseif($a->status_terbaru === 'Diproses' || $a->status_terbaru === 'Sedang Dikerjakan')
-                                            <span class="badge bg-warning text-dark"><i class="bi bi-gear-fill me-1"></i>Sedang Dikerjakan</span>
+                                        @if($a->foto_url)
+                                            <img src="{{ $a->foto_url }}" 
+                                                class="img-thumbnail"
+                                                style="width: 100px; height: 100px; object-fit: cover;">
                                         @else
-                                            <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Selesai</span>
+                                            <small class="text-muted">Tidak ada foto</small>
                                         @endif
                                     </td>
+
+                                    {{-- MAHASISWA --}}
+                                    <td>
+                                        <strong>{{ $a->nama_mahasiswa }}</strong><br>
+                                        <small class="text-muted">{{ $a->npm }}</small>
+                                    </td>
+
+                                    <td>{{ $a->kategori }}</td>
+
+                                    <td>
+                                        @if($a->status_terbaru === 'Menunggu')
+                                            <span class="badge bg-secondary">Menunggu</span>
+                                        @elseif($a->status_terbaru === 'Diproses' || $a->status_terbaru === 'Sedang Dikerjakan')
+                                            <span class="badge bg-warning text-dark">Sedang Dikerjakan</span>
+                                        @else
+                                            <span class="badge bg-success">Selesai</span>
+                                        @endif
+                                    </td>
+
                                     <td>{{ $a->catatan_admin ?? '-' }}</td>
+
+                                    {{-- Aksi --}}
                                     <td class="text-center">
                                         @if($a->status_terbaru !== 'Selesai')
                                             <a href="{{ route('pic.tindaklanjut.form', $a->id) }}" 
-                                               class="btn btn-sm btn-warning text-white shadow-sm">
-                                                <i class="bi bi-pencil-square me-1"></i>Tindak Lanjut
+                                               class="btn btn-sm btn-warning text-white">
+                                                <i class="bi bi-pencil-square me-1"></i> Tindak Lanjut
                                             </a>
                                         @else
                                             <a href="{{ route('pic.tindaklanjut.view', $a->id) }}" 
-                                               class="btn btn-sm btn-success text-white shadow-sm">
-                                                <i class="bi bi-eye me-1"></i>Lihat Tindak Lanjut
+                                               class="btn btn-sm btn-success text-white">
+                                                <i class="bi bi-eye me-1"></i> Lihat
                                             </a>
                                         @endif
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
+
                     </table>
                 </div>
             </div>

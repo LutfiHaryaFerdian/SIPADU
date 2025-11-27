@@ -65,6 +65,14 @@
                     <small class="text-muted">Catatan ini akan disimpan setelah status diubah menjadi selesai.</small>
                 </div>
 
+                @if($aduan->foto_url)
+                <div class="mb-3 text-center">
+                    <img src="{{ $aduan->foto_url }}" 
+                        class="img-fluid rounded shadow"
+                        style="max-height: 250px;">
+                </div>
+                @endif
+
                 <div class="d-flex justify-content-between align-items-center">
                     <a href="{{ route('pic.aduan.index') }}" class="btn btn-outline-secondary shadow-sm">
                         <i class="bi bi-arrow-left-circle me-1"></i> Kembali
