@@ -41,6 +41,24 @@ class AdminController extends Controller
         return view('admin.aduan_index', compact('aduan', 'picUnits'));
     }
 
+    // 🔍 Detail aduan untuk admin (validasi)
+    public function detailAduan($id)
+    {
+        $aduan = DB::table('aduan')
+            ->leftJoin('mahasiswa', 'aduan.id_mahasiswa', '=', 'mahasiswa.id')
+            ->where('aduan.id', $id)
+            ->select('aduan.*', 'mahasiswa.nama as nama_mahasiswa', 'mahasiswa.npm', 'mahasiswa.email')
+            ->first();
+
+        if (!$aduan) {
+            return back()->with('error', 'Aduan tidak ditemukan.');
+        }
+
+        $picUnits = DB::table('pic_units')->get();
+
+        return view('admin.aduan_detail', compact('aduan', 'picUnits'));
+    }
+
     // 🧩 Menugaskan aduan ke PIC
     public function assignToPic(Request $request, $id)
     {
@@ -48,10 +66,14 @@ class AdminController extends Controller
             'id_pic' => 'required|uuid',
         ]);
 
-        // Cek apakah aduan ada
+        // Cek apakah aduan ada dan sudah valid
         $aduan = DB::table('aduan')->where('id', $id)->first();
         if (!$aduan) {
             return back()->with('error', 'Aduan tidak ditemukan.');
+        }
+
+        if ($aduan->status_validasi !== 'Valid') {
+            return back()->with('error', 'Aduan harus divalidasi terlebih dahulu sebelum ditugaskan.');
         }
 
         // Buat penugasan
@@ -69,6 +91,49 @@ class AdminController extends Controller
         DB::table('aduan')->where('id', $id)->update(['status' => 'Diproses']);
 
         return back()->with('success', 'Aduan berhasil ditugaskan ke PIC.');
+    }
+
+    // ✅ Validasi aduan (Valid)
+    public function validateAduan(Request $request, $id)
+    {
+        $request->validate([
+            'catatan_admin' => 'required|string|max:1000',
+        ]);
+
+        $aduan = DB::table('aduan')->where('id', $id)->first();
+        if (!$aduan) {
+            return back()->with('error', 'Aduan tidak ditemukan.');
+        }
+
+        DB::table('aduan')->where('id', $id)->update([
+            'status_validasi' => 'Valid',
+            'catatan_admin' => $request->catatan_admin,
+            'updated_at' => now(),
+        ]);
+
+        return back()->with('success', 'Aduan berhasil divalidasi sebagai Valid.');
+    }
+
+    // ❌ Tolak aduan (Tidak Valid)
+    public function rejectAduan(Request $request, $id)
+    {
+        $request->validate([
+            'catatan_admin' => 'required|string|max:1000',
+        ]);
+
+        $aduan = DB::table('aduan')->where('id', $id)->first();
+        if (!$aduan) {
+            return back()->with('error', 'Aduan tidak ditemukan.');
+        }
+
+        DB::table('aduan')->where('id', $id)->update([
+            'status_validasi' => 'Tidak Valid',
+            'status' => 'Ditolak',
+            'catatan_admin' => $request->catatan_admin,
+            'updated_at' => now(),
+        ]);
+
+        return back()->with('success', 'Aduan berhasil ditolak.');
     }
 
     // 🧾 Ubah status aduan jadi selesai

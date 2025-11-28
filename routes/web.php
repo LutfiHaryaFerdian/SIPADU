@@ -30,6 +30,9 @@ Route::post('/register/send-otp', [RegisterController::class, 'sendOtp'])->name(
 Route::get('/register/verify', [RegisterController::class, 'verifyForm'])->name('register.verifyForm');
 Route::post('/register/verify', [RegisterController::class, 'verifyOtp'])->name('register.verifyOtp');
 
+// Public aduan detail (accessible tanpa login)
+Route::get('/aduan-publik/{id}', [AduanController::class, 'publicDetail'])->name('aduan.publik.detail');
+
 // ===================================================
 // AUTHENTICATION (Login & Logout per Role)
 // ===================================================
@@ -46,6 +49,9 @@ Route::middleware('admin')->group(function () {
 
     // Manajemen Aduan
     Route::get('/admin/aduan', [AdminController::class, 'indexAduan'])->name('admin.aduan.index');
+    Route::get('/admin/aduan/{id}/detail', [AdminController::class, 'detailAduan'])->name('admin.aduan.detail');
+    Route::post('/admin/aduan/{id}/validate', [AdminController::class, 'validateAduan'])->name('admin.aduan.validate');
+    Route::post('/admin/aduan/{id}/reject', [AdminController::class, 'rejectAduan'])->name('admin.aduan.reject');
     Route::post('/admin/aduan/{id}/assign', [AdminController::class, 'assignToPic'])->name('admin.aduan.assign');
     Route::post('/admin/aduan/{id}/done', [AdminController::class, 'markAsDone'])->name('admin.aduan.done');
 });

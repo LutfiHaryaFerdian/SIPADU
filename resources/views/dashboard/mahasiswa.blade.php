@@ -1,6 +1,6 @@
 @extends('layouts.mahasiswa')
 
-@section('title', 'Dashboard Mahasiswa')
+@section('title', 'SIPADU - Dashboard Mahasiswa')
 
 @section('content')
 @php
@@ -97,22 +97,31 @@
                                 <th>Kategori</th>
                                 <th>Status</th>
                                 <th>Tanggal</th>
+                                <th class="text-center">Detail</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($aduanTerbaru as $a)
                                 <tr>
-                                    <td>{{ $a->judul }}</td>
+                                    <td>
+                                        {{ $a->judul }}
+                                    </td>
                                     <td>{{ $a->kategori }}</td>
                                     <td>
                                         <span class="badge 
                                             @if($a->status == 'Diproses') bg-warning text-dark
                                             @elseif($a->status == 'Selesai') bg-success
+                                            @elseif($a->status == 'Ditolak') bg-danger text-white
                                             @else bg-secondary @endif">
                                             {{ $a->status }}
                                         </span>
                                     </td>
                                     <td>{{ Carbon::parse($a->created_at)->format('d M Y') }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ route('aduan.publik.detail', $a->id) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye me-1"></i> Lihat Detail
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

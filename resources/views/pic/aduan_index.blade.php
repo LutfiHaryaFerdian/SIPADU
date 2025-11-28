@@ -1,6 +1,6 @@
 @extends('layouts.pic')
 
-@section('title', 'Aduan Ditugaskan')
+@section('title', 'SIPADU - Aduan Ditugaskan')
 
 @section('content')
 <div class="container my-5">
@@ -49,17 +49,35 @@
                         <tbody>
                             @foreach($aduan as $a)
                                 <tr>
-                                    <td class="fw-semibold">{{ $a->judul }}</td>
+                                    <td class="fw-semibold">
+                                        {{ $a->judul }}
+                                    </td>
 
                                     {{-- FOTO --}}
                                     <td>
-                                        @if($a->foto_url)
-                                            <img src="{{ $a->foto_url }}" 
-                                                class="img-thumbnail"
-                                                style="width: 100px; height: 100px; object-fit: cover;">
-                                        @else
-                                            <small class="text-muted">Tidak ada foto</small>
-                                        @endif
+                                        <div class="d-flex gap-2 align-items-center flex-wrap">
+
+                                            <!-- Foto Bukti (Multiple) - Bisa Dilihat -->
+                                            @php
+                                                $fotoBuktiArray = is_string($a->foto_bukti) ? json_decode($a->foto_bukti, true) : ($a->foto_bukti ?? []);
+                                                // Fallback untuk data lama
+                                                if (empty($fotoBuktiArray) && isset($a->foto_url)) {
+                                                    $fotoBuktiArray = [$a->foto_url];
+                                                }
+                                            @endphp
+                                            @if(!empty($fotoBuktiArray) && count($fotoBuktiArray) > 0)
+                                                <div class="position-relative d-inline-block">
+                                                    <img src="{{ $fotoBuktiArray[0] }}" 
+                                                         class="img-thumbnail" 
+                                                         style="width: 70px; height: 70px; object-fit: cover;">
+                                                    @if(count($fotoBuktiArray) > 1)
+                                                        <span class="position-absolute bottom-0 end-0 badge bg-dark rounded-circle" style="font-size: 0.7rem; padding: 2px 4px;">+{{ count($fotoBuktiArray) - 1 }}</span>
+                                                    @endif
+                                                </div>
+                                            @else
+                                                <span class="text-muted fs-6">-</span>
+                                            @endif
+                                        </div>
                                     </td>
 
                                     {{-- MAHASISWA --}}
@@ -75,6 +93,8 @@
                                             <span class="badge bg-secondary">Menunggu</span>
                                         @elseif($a->status_terbaru === 'Diproses' || $a->status_terbaru === 'Sedang Dikerjakan')
                                             <span class="badge bg-warning text-dark">Sedang Dikerjakan</span>
+                                        @elseif($a->status_terbaru === 'Ditolak')
+                                            <span class="badge bg-danger text-white">Ditolak</span>
                                         @else
                                             <span class="badge bg-success">Selesai</span>
                                         @endif

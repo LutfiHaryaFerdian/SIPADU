@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Aduan')
+@section('title', 'SIPADU - Manajemen Aduan')
 
 @section('content')
 <div class="container my-5">
@@ -52,6 +52,7 @@
                                 <th>Mahasiswa</th>
                                 <th>Kategori</th>
                                 <th>Status</th>
+                                <th>Validasi</th>
                                 <th>Foto</th>
                                 <th>Nomor Tiket</th>
                                 <th class="text-center">Aksi</th>
@@ -60,7 +61,9 @@
                         <tbody>
                             @foreach($aduan as $a)
                                 <tr>
-                                    <td class="fw-semibold">{{ $a->judul }}</td>
+                                    <td class="fw-semibold">
+                                        {{ $a->judul }}
+                                    </td>
                                     <td>
                                         <strong>{{ $a->nama_mahasiswa }}</strong><br>
                                         <small class="text-muted">NPM: {{ $a->npm }}</small>
@@ -82,46 +85,60 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($a->foto_url)
-                                            <img src="{{ $a->foto_url }}" alt="Foto Aduan"
-                                                class="img-fluid rounded shadow-sm"
-                                                style="width: 90px; height: 90px; object-fit: cover;">
+                                        @if($a->status_validasi === null)
+                                            <span class="badge bg-dark">
+                                                <i class="bi bi-question-circle me-1"></i>Belum
+                                            </span>
+                                        @elseif($a->status_validasi === 'Valid')
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle-fill me-1"></i>Valid
+                                            </span>
                                         @else
-                                            <span class="text-muted">Tidak ada foto</span>
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-circle-fill me-1"></i>Tidak Valid
+                                            </span>
                                         @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2 align-items-center flex-wrap">
+                                            <!-- Foto KTM -->
+                                            @if($a->foto_ktm)
+                                                <div class="position-relative d-inline-block">
+                                                    <img src="{{ $a->foto_ktm }}" 
+                                                         class="img-thumbnail" 
+                                                         style="width: 70px; height: 70px; object-fit: cover;">
+                                                </div>
+                                            @else
+                                                <span class="text-muted fs-6">-</span>
+                                            @endif
+
+                                            <!-- Foto Bukti (Multiple) -->
+                                            @php
+                                                $fotoBuktiArray = is_string($a->foto_bukti) ? json_decode($a->foto_bukti, true) : ($a->foto_bukti ?? []);
+                                                // Fallback untuk data lama
+                                                if (empty($fotoBuktiArray) && isset($a->foto_url)) {
+                                                    $fotoBuktiArray = [$a->foto_url];
+                                                }
+                                            @endphp
+                                            @if(!empty($fotoBuktiArray) && count($fotoBuktiArray) > 0)
+                                                <div class="position-relative d-inline-block">
+                                                    <img src="{{ $fotoBuktiArray[0] }}" 
+                                                         class="img-thumbnail" 
+                                                         style="width: 70px; height: 70px; object-fit: cover;">
+                                                    @if(count($fotoBuktiArray) > 1)
+                                                        <span class="position-absolute bottom-0 end-0 badge bg-dark rounded-circle" style="font-size: 0.7rem; padding: 2px 4px;">+{{ count($fotoBuktiArray) - 1 }}</span>
+                                                    @endif
+                                                </div>
+                                            @else
+                                                <span class="text-muted fs-6">-</span>
+                                            @endif
+                                        </div>
                                     </td>
                                     <td class="font-monospace">{{ $a->nomor_tiket }}</td>
                                     <td class="text-center">
-                                        @if($a->status === 'Menunggu')
-                                            <form action="{{ route('admin.aduan.assign', $a->id) }}" method="POST" class="p-2 bg-light rounded shadow-sm">
-                                                @csrf
-                                                <div class="mb-2">
-                                                    <select name="id_pic" class="form-select form-select-sm border-danger" required>
-                                                        <option value="">Pilih PIC Unit</option>
-                                                        @foreach($picUnits as $p)
-                                                            <option value="{{ $p->id }}">{{ $p->nama_unit }} - {{ $p->nama_pic }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="mb-2">
-                                                    <textarea name="catatan" placeholder="Catatan (opsional)" class="form-control form-control-sm border-danger" rows="2"></textarea>
-                                                </div>
-                                                <button type="submit" class="btn btn-sm btn-danger w-100">
-                                                    <i class="bi bi-send-fill me-1"></i> Tugaskan ke PIC
-                                                </button>
-                                            </form>
-                                        @elseif($a->status === 'Diproses')
-                                            <form action="{{ route('admin.aduan.done', $a->id) }}" method="POST">
-                                                @csrf
-                                                <button class="btn btn-sm btn-success w-100 shadow-sm">
-                                                    <i class="bi bi-check2-circle me-1"></i> Tandai Selesai
-                                                </button>
-                                            </form>
-                                        @else
-                                            <span class="text-success fw-semibold">
-                                                <i class="bi bi-check-circle me-1"></i> Selesai
-                                            </span>
-                                        @endif
+                                        <a href="{{ route('admin.aduan.detail', $a->id) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye me-1"></i> Lihat Detail
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

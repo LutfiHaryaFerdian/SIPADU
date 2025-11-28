@@ -1,6 +1,6 @@
 @extends('layouts.mahasiswa')
 
-@section('title', 'Aduan Publik')
+@section('title', 'SIPADU - Aduan Publik')
 
 @section('content')
 <div class="container my-5">
@@ -27,24 +27,33 @@
                                 <th>Status</th>
                                 <th>Nomor Tiket</th>
                                 <th>Dibuat</th>
+                                <th class="text-center">Detail</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($aduan as $a)
                                 <tr>
-                                    <td>{{ $a->judul }}</td>
+                                    <td>
+                                        {{ $a->judul }}
+                                    </td>
                                     <td>{{ $a->kategori }}</td>
                                     <td>
                                         <span class="badge 
                                             @if($a->status == 'Menunggu') bg-secondary
                                             @elseif($a->status == 'Diproses') bg-warning text-dark
                                             @elseif($a->status == 'Selesai') bg-success
+                                            @elseif($a->status == 'Ditolak') bg-danger text-white
                                             @endif">
                                             {{ $a->status }}
                                         </span>
                                     </td>
                                     <td><code>{{ $a->nomor_tiket }}</code></td>
                                     <td>{{ date('d M Y H:i', strtotime($a->created_at)) }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ route('aduan.publik.detail', $a->id) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye me-1"></i> Lihat Detail
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard Admin')
+@section('title', 'SIPADU - Dashboard Admin')
 
 @section('content')
 @php
@@ -89,13 +89,16 @@
                         <tbody>
                             @foreach($aduanTerbaru as $a)
                                 <tr>
-                                    <td>{{ $a->judul }}</td>
+                                    <td>
+                                        {{ $a->judul }}
+                                    </td>
                                     <td>{{ $a->nama_mhs }}</td>
                                     <td>
                                         <span class="badge 
                                             @if($a->status == 'Menunggu') bg-secondary
                                             @elseif($a->status == 'Diproses') bg-warning text-dark
                                             @elseif($a->status == 'Selesai') bg-success
+                                            @elseif($a->status == 'Ditolak') bg-danger text-white
                                             @endif">
                                             {{ $a->status }}
                                         </span>
