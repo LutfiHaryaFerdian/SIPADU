@@ -111,6 +111,7 @@
                                         <span class="badge 
                                             @if($a->status == 'Diproses') bg-warning text-dark
                                             @elseif($a->status == 'Selesai') bg-success
+                                            @elseif($a->status == 'Ditolak') bg-danger text-white
                                             @else bg-secondary @endif">
                                             {{ $a->status }}
                                         </span>

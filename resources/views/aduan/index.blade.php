@@ -69,6 +69,7 @@
                                             @if($a->status == 'Menunggu') bg-secondary
                                             @elseif($a->status == 'Diproses') bg-warning text-dark
                                             @elseif($a->status == 'Selesai') bg-success
+                                            @elseif($a->status == 'Ditolak') bg-danger text-white
                                             @endif">
                                             {{ $a->status }}
                                         </span>

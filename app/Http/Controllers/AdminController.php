@@ -128,6 +128,7 @@ class AdminController extends Controller
 
         DB::table('aduan')->where('id', $id)->update([
             'status_validasi' => 'Tidak Valid',
+            'status' => 'Ditolak',
             'catatan_admin' => $request->catatan_admin,
             'updated_at' => now(),
         ]);

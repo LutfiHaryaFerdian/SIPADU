@@ -107,6 +107,10 @@
                                         <span class="badge bg-warning text-dark">
                                             <i class="bi bi-gear-fill me-1"></i>Sedang Dikerjakan
                                         </span>
+                                    @elseif($statusDisplay == 'Ditolak')
+                                        <span class="badge bg-danger text-white">
+                                            <i class="bi bi-x-circle-fill me-1"></i>Ditolak
+                                        </span>
                                     @else
                                         <span class="badge bg-success">
                                             <i class="bi bi-check-circle-fill me-1"></i>Selesai

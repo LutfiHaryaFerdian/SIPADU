@@ -21,19 +21,28 @@
                 <form method="POST" action="{{ route('aduan.store') }}" enctype="multipart/form-data" id="aduanForm">
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Judul Aduan</label>
+                    <label class="form-label fw-semibold">Judul Aduan</label><span class="text-danger"> *</span>
                     <input type="text" name="judul" class="form-control" placeholder="Masukkan judul aduan..." required>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label fw-semibold">Kategori</label>
+                    <label class="form-label fw-semibold">Kategori</label><span class="text-danger"> *</span>
                     <input type="text" name="kategori" class="form-control" placeholder="Masukkan kategori aduan..." required>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label fw-semibold">Deskripsi</label>
-                    <textarea name="deskripsi" rows="5" class="form-control" placeholder="Tuliskan deskripsi lengkap aduan Anda..." required></textarea>
-                </div>
+                    <label class="form-label fw-semibold">Deskripsi</label><span class="text-danger"> *</span>
+                <label for="deskripsi" class="form-label">
+    <strong style="color:#d00;">Perhatian:</strong> 
+    <strong>Deskripsi aduan akan tampil untuk publik.</strong> 
+    Jangan tuliskan identitas pribadi atau informasi sensitif. 
+    Jika ada data penting untuk verifikasi (seperti identitas, kontak, atau bukti detail), 
+    silakan lampirkan melalui <strong>Foto Bukti</strong> yang hanya dapat dilihat petugas.
+</label>
+
+<textarea name="deskripsi" rows="5" class="form-control"
+    placeholder="Tuliskan deskripsi aduan secara jelas..."
+    required></textarea></div>
 
                 <!-- Foto KTM -->
                 <div class="mb-3">

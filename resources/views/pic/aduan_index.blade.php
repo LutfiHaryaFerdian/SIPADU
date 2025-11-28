@@ -99,6 +99,8 @@
                                             <span class="badge bg-secondary">Menunggu</span>
                                         @elseif($a->status_terbaru === 'Diproses' || $a->status_terbaru === 'Sedang Dikerjakan')
                                             <span class="badge bg-warning text-dark">Sedang Dikerjakan</span>
+                                        @elseif($a->status_terbaru === 'Ditolak')
+                                            <span class="badge bg-danger text-white">Ditolak</span>
                                         @else
                                             <span class="badge bg-success">Selesai</span>
                                         @endif

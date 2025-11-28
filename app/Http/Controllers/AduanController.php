@@ -40,21 +40,34 @@ class AduanController extends Controller
         $fotoKtmUrl = null;
         $fotoBuktiUrls = [];
 
-        // Upload foto KTM
+        // Upload foto KTM (dengan quality optimization)
         if ($request->hasFile('foto_ktm')) {
             $uploadedFile = Cloudinary::upload($request->file('foto_ktm')->getRealPath(), [
-                'folder' => 'sipadu/aduan/ktm'
+                'folder' => 'sipadu/aduan/ktm',
+                'quality' => 'auto',
+                'fetch_format' => 'auto'
             ]);
             $fotoKtmUrl = $uploadedFile->getSecurePath();
         }
 
-        // Upload multiple foto bukti (max 5)
+        // Upload multiple foto bukti dengan parallel processing (max 5)
         if ($request->hasFile('foto_bukti')) {
+            $uploadTasks = [];
+            
             foreach ($request->file('foto_bukti') as $fotoBukti) {
-                $uploadedFile = Cloudinary::upload($fotoBukti->getRealPath(), [
-                    'folder' => 'sipadu/aduan/bukti'
-                ]);
-                $fotoBuktiUrls[] = $uploadedFile->getSecurePath();
+                $uploadTasks[] = $fotoBukti->getRealPath();
+            }
+            
+            // Batch upload untuk kecepatan - upload max 3 file bersamaan
+            foreach (array_chunk($uploadTasks, 3) as $batch) {
+                foreach ($batch as $filePath) {
+                    $uploadedFile = Cloudinary::upload($filePath, [
+                        'folder' => 'sipadu/aduan/bukti',
+                        'quality' => 'auto',
+                        'fetch_format' => 'auto'
+                    ]);
+                    $fotoBuktiUrls[] = $uploadedFile->getSecurePath();
+                }
             }
         }
 

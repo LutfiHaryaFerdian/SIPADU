@@ -32,7 +32,7 @@
                 </div>
                 <div class="modal-body">
                     <!-- Carousel untuk Multiple Foto -->
-                    <div id="{{ $carouselId }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+                    <div id="{{ $carouselId }}" class="carousel slide" data-bs-interval="false" data-bs-keyboard="false">
                         <div class="carousel-inner">
                             @foreach($fotoBuktiArray as $index => $foto)
                                 <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
@@ -92,7 +92,11 @@
         const fotos = @json($fotoBuktiArray);
         
         if (carousel && openTabBtn) {
-            const carouselInstance = new bootstrap.Carousel(carousel, { interval: false, keyboard: true });
+            const carouselInstance = new bootstrap.Carousel(carousel, { 
+                interval: false, 
+                keyboard: false,
+                wrap: true 
+            });
             
             carousel.addEventListener('slide.bs.carousel', function(event) {
                 if (fotos[event.to]) {

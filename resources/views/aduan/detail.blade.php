@@ -16,6 +16,8 @@
                         <span class="badge bg-secondary">Menunggu</span>
                     @elseif($aduan->status === 'Diproses' || $aduan->status === 'Sedang Dikerjakan')
                         <span class="badge bg-warning text-dark">Sedang Dikerjakan</span>
+                    @elseif($aduan->status === 'Ditolak')
+                        <span class="badge bg-danger text-white">Ditolak</span>
                     @else
                         <span class="badge bg-success">Selesai</span>
                     @endif
@@ -29,7 +31,6 @@
                     <p class="mb-0"><strong>Kategori:</strong> {{ $aduan->kategori }}</p><br>
                     <h6 class="fw-semibold">Deskripsi Aduan</h6>
                     <div class="p-3 bg-light border rounded">{{ $aduan->deskripsi }}</div><br>
-                    <h6 class="fw-semibold">Catatan PIC Unit</h6>
                     <div class="p-3 bg-white border rounded">
                         @if($aduan->status_validasi !== null)
                             <div class="mb-3">
@@ -45,12 +46,15 @@
                                     @endif
                                 </div>
                                 <div class="p-3 bg-light border rounded">
-                                    <strong>Catatan Admin:</strong>
+                                    <strong>Catatan Admin</strong>
                                     <p class="mb-0 mt-2">{{ $aduan->catatan_admin }}</p>
                                 </div>
                             </div>
                         @endif
-                        
+</div><br>
+                        <div class="p-3 bg-white border rounded">
+                    <h6 class="fw-semibold">Catatan PIC Unit</h6>
+                    
                         @if($catatanPic->isEmpty())
                             <div class="text-muted small">
                                 @if($aduan->status_validasi === null)
@@ -97,7 +101,7 @@
                         @if($userType === 'mahasiswa_owner' || $userType === 'admin')
                             @if($aduan->foto_ktm || !empty($fotoBuktiArray))
                                 <div class="mb-3">
-                                    <h6 class="fw-semibold">Lampiran Bukti</h6>
+                                    <br><h6 class="fw-semibold">Lampiran Foto</h6>
                                     <div class="row g-3">
                                         <!-- Foto KTM -->
                                         @if($aduan->foto_ktm)
@@ -147,7 +151,7 @@
                         @elseif($userType === 'pic')
                             @if(!empty($fotoBuktiArray) && count($fotoBuktiArray) > 0)
                                 <div class="mb-3">
-                                    <h6 class="fw-semibold">Lampiran Bukti</h6>
+                                    <h6 class="fw-semibold">Lampiran Foto</h6>
                                     <div class="row g-3">
                                         <!-- Foto Bukti (Multiple/Gallery) -->
                                         <div class="col-md-6">
@@ -200,7 +204,7 @@
             </div>
 
             <div class="mt-4">
-                <a href="{{ route('aduan.publik') }}" class="btn btn-outline-secondary">Kembali ke Daftar Aduan Publik</a>
+                <a href="{{ route('aduan.publik') }}" class="btn btn-outline-secondary">← Kembali</a>
             </div>
         </div>
     </div>
