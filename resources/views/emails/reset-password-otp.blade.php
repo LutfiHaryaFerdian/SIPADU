@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Verifikasi OTP SIPADU</title>
+    <title>Reset Password SIPADU</title>
 </head>
 <body style="margin:0;padding:0;background:#eef2f7;font-family:'Segoe UI',Roboto,Arial,sans-serif;">
 
@@ -14,9 +14,8 @@
                 
                 <!-- HEADER -->
                 <tr>
-                    <td style="background:linear-gradient(135deg,#2563eb,#1e40af);padding:30px;text-align:center;">
+                    <td style="background:linear-gradient(135deg,#dc2626,#991b1b);padding:30px;text-align:center;">
 
-                        <!-- ICON MORTARBOARD (EMAIL SAFE) -->
                         <div style="margin-bottom:10px;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" fill="#ffffff" viewBox="0 0 16 16">
                                 <path d="M8 0L0 4l8 4 6.325-3.162v4.838h1V4.5L16 4 8 0z"/>
@@ -33,22 +32,22 @@
                 <!-- CONTENT -->
                 <tr>
                     <td style="padding:40px 30px;text-align:center;color:#1f2937;">
-                        <h2 style="margin-top:0;">Verifikasi Akun Anda</h2>
+                        <h2 style="margin-top:0;">Reset Password Akun</h2>
                         <p style="font-size:15px;color:#6b7280;">
-                            Terima kasih telah mendaftar di SIPADU.  
-                            Gunakan kode OTP berikut untuk menyelesaikan proses registrasi:
+                            Kami menerima permintaan reset password akun Anda.  
+                            Gunakan kode OTP berikut untuk melanjutkan proses reset:
                         </p>
 
                         <div style="
                             margin:30px auto;
                             display:inline-block;
-                            background:#f1f5f9;
+                            background:#fef2f2;
                             padding:20px 40px;
                             border-radius:12px;
                             font-size:36px;
                             font-weight:bold;
                             letter-spacing:8px;
-                            color:#2563eb;
+                            color:#dc2626;
                         ">
                             {{ $otp }}
                         </div>
@@ -58,7 +57,7 @@
                         </p>
 
                         <p style="font-size:13px;color:#9ca3af;">
-                            Jika Anda tidak merasa melakukan pendaftaran, silakan abaikan email ini.
+                            Jika Anda tidak meminta reset password, segera abaikan email ini.
                         </p>
                     </td>
                 </tr>

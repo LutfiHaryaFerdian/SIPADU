@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use App\Models\MahasiswaOtp;
+use App\Mail\OtpMail;
 
 class RegisterController extends Controller
 {
@@ -40,10 +41,7 @@ class RegisterController extends Controller
             'reg_password' => Hash::make($request->password),
         ]);
 
-        Mail::raw("Kode OTP Anda untuk registrasi SIPADU adalah: $otp\n\nBerlaku selama 5 menit.", function($message) use ($request) {
-            $message->to($request->email)
-                    ->subject('Kode OTP Registrasi SIPADU');
-        });
+        Mail::to($request->email)->send(new OtpMail($otp));
 
         return redirect()->route('register.verifyForm')
                          ->with('success', 'Kode OTP telah dikirim ke email Anda.');

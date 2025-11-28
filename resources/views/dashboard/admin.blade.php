@@ -1,16 +1,12 @@
 @extends('layouts.admin')
-
 @section('title', 'SIPADU - Dashboard Admin')
-
 @section('content')
 @php
     use Illuminate\Support\Facades\DB;
     use Carbon\Carbon;
-
     $totalAduan = DB::table('aduan')->count();
     $aduanProses = DB::table('aduan')->where('status', 'Diproses')->count();
     $aduanSelesai = DB::table('aduan')->where('status', 'Selesai')->count();
-
     $aduanTerbaru = DB::table('aduan')
         ->join('mahasiswa', 'aduan.id_mahasiswa', '=', 'mahasiswa.id')
         ->select('aduan.*', 'mahasiswa.nama as nama_mhs')
@@ -19,18 +15,26 @@
         ->get();
 @endphp
 
-<div class="container my-5">
-    <!-- Header -->
-    <div class="text-center mb-5">
-        <img src="https://cdn-icons-png.flaticon.com/512/4228/4228757.png" alt="Admin Dashboard" 
-             class="img-fluid mb-3" style="max-height: 120px;">
-        <h2 class="fw-bold text-danger">
-            <i class="bi bi-speedometer2 me-2"></i>Dashboard Admin
-        </h2>
-        <p class="text-muted">Kelola dan pantau seluruh aduan mahasiswa secara efisien.</p>
+<!-- 🔷 Hero Admin -->
+<!-- Updated hero section with consistent styling and local image -->
+<section class="admin-hero position-relative text-white">
+    <div class="admin-hero-overlay"></div>
+    <div class="container position-relative">
+        <div class="row align-items-center justify-content-center min-vh-50">
+            <div class="col-lg-7 text-start">
+                <h1 class="fw-bold mb-3 display-5">
+                    Selamat datang, Admin! 👋
+                </h1>
+                <p class="mb-4 fs-5">
+                    Kelola dan pantau seluruh <strong>aduan mahasiswa SIPADU</strong> secara cepat, akurat, dan efisien.
+                </p>
+            </div>
+        </div>
     </div>
+</section>
 
-    <!-- Statistik -->
+<!-- Statistik -->
+<div class="container my-5">
     <div class="row g-4 mb-5">
         <div class="col-md-4">
             <div class="card text-white bg-danger shadow-sm border-0 h-100">
@@ -88,23 +92,16 @@
                         </thead>
                         <tbody>
                             @foreach($aduanTerbaru as $a)
-                                <tr>
-                                    <td>
-                                        {{ $a->judul }}
-                                    </td>
-                                    <td>{{ $a->nama_mhs }}</td>
-                                    <td>
-                                        <span class="badge 
-                                            @if($a->status == 'Menunggu') bg-secondary
-                                            @elseif($a->status == 'Diproses') bg-warning text-dark
-                                            @elseif($a->status == 'Selesai') bg-success
-                                            @elseif($a->status == 'Ditolak') bg-danger text-white
-                                            @endif">
-                                            {{ $a->status }}
-                                        </span>
-                                    </td>
-                                    <td>{{ Carbon::parse($a->created_at)->format('d M Y') }}</td>
-                                </tr>
+                            <tr>
+                                <td>{{ $a->judul }}</td>
+                                <td>{{ $a->nama_mhs }}</td>
+                                <td>
+                                    <span class="badge @if($a->status == 'Menunggu') bg-secondary @elseif($a->status == 'Diproses') bg-warning text-dark @elseif($a->status == 'Selesai') bg-success @elseif($a->status == 'Ditolak') bg-danger text-white @endif">
+                                        {{ $a->status }}
+                                    </span>
+                                </td>
+                                <td>{{ Carbon::parse($a->created_at)->format('d M Y') }}</td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -115,10 +112,43 @@
 </div>
 
 <style>
-.card:hover {
-    transform: translateY(-4px);
-    transition: all 0.3s ease-in-out;
-    box-shadow: 0 6px 18px rgba(220, 53, 69, 0.2);
-}
+    .admin-hero {
+        background: url('{{ asset("images/admindba.jpeg") }}') center center / cover no-repeat;
+        min-height: 420px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        margin-top: -56px;
+        margin-bottom: 0;
+    }
+
+    .admin-hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            rgba(0,0,0,0.6),
+            rgba(0,0,0,0.6)
+        );
+        z-index: 1;
+    }
+
+    .admin-hero .container {
+        z-index: 2;
+    }
+
+    .min-vh-50 {
+        min-height: 420px;
+    }
+
+    .card:hover {
+        transform: translateY(-6px);
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 25px rgba(220, 53, 69, 0.25);
+    }
 </style>
 @endsection
