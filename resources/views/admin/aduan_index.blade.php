@@ -63,7 +63,6 @@
                                 <tr>
                                     <td class="fw-semibold">
                                         {{ $a->judul }}
-                                        <a href="{{ route('admin.aduan.detail', $a->id) }}" class="ms-2 text-primary" style="text-decoration: underline;">Detail Aduan</a>
                                     </td>
                                     <td>
                                         <strong>{{ $a->nama_mahasiswa }}</strong><br>

@@ -95,7 +95,6 @@
                             <tr>
                                 <td>
                                     {{ $a->judul }}
-                                    <a href="{{ route('aduan.publik.detail', $a->id) }}" class="ms-2 text-primary" style="text-decoration: underline;">Detail Aduan</a>
                                 </td>
                                 <td>{{ $a->kategori }}</td>
                                 <td>

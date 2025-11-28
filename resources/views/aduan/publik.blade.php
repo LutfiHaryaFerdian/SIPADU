@@ -27,6 +27,7 @@
                                 <th>Status</th>
                                 <th>Nomor Tiket</th>
                                 <th>Dibuat</th>
+                                <th class="text-center">Detail</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -34,7 +35,6 @@
                                 <tr>
                                     <td>
                                         {{ $a->judul }}
-                                        <a href="{{ route('aduan.publik.detail', $a->id) }}" class="ms-2 text-primary" style="text-decoration: underline;">Detail Aduan</a>
                                     </td>
                                     <td>{{ $a->kategori }}</td>
                                     <td>
@@ -49,6 +49,11 @@
                                     </td>
                                     <td><code>{{ $a->nomor_tiket }}</code></td>
                                     <td>{{ date('d M Y H:i', strtotime($a->created_at)) }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ route('aduan.publik.detail', $a->id) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye me-1"></i> Lihat Detail
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

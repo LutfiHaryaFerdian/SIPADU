@@ -73,11 +73,6 @@
                                                     @if(count($fotoBuktiArray) > 1)
                                                         <span class="position-absolute bottom-0 end-0 badge bg-dark rounded-circle" style="font-size: 0.7rem; padding: 2px 4px;">+{{ count($fotoBuktiArray) - 1 }}</span>
                                                     @endif
-                                                    <div class="position-absolute top-0 end-0" style="background: white; border-radius: 50%; padding: 2px; margin: -8px -8px 0 0;">
-                                                        <x-photo-gallery 
-                                                            :fotoBuktiArray="$fotoBuktiArray" 
-                                                            label="Foto Bukti Aduan" />
-                                                    </div>
                                                 </div>
                                             @else
                                                 <span class="text-muted fs-6">-</span>

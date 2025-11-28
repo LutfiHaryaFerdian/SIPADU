@@ -97,6 +97,7 @@
                                 <th>Kategori</th>
                                 <th>Status</th>
                                 <th>Tanggal</th>
+                                <th class="text-center">Detail</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,7 +105,6 @@
                                 <tr>
                                     <td>
                                         {{ $a->judul }}
-                                        <a href="{{ route('aduan.publik.detail', $a->id) }}" class="ms-2 text-primary" style="text-decoration: underline;">Detail Aduan</a>
                                     </td>
                                     <td>{{ $a->kategori }}</td>
                                     <td>
@@ -117,6 +117,11 @@
                                         </span>
                                     </td>
                                     <td>{{ Carbon::parse($a->created_at)->format('d M Y') }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ route('aduan.publik.detail', $a->id) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye me-1"></i> Lihat Detail
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

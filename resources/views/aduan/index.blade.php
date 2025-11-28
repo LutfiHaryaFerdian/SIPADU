@@ -51,6 +51,7 @@
                                 <th>Validasi</th>
                                 <th>Foto</th>
                                 <th>Nomor Tiket</th>
+                                <th class="text-center">Detail</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -60,7 +61,6 @@
                                 <tr>
                                     <td>
                                         {{ $a->judul }}
-                                        <a href="{{ route('aduan.publik.detail', $a->id) }}" class="ms-2 text-primary" style="text-decoration: underline;">Detail Aduan</a>
                                     </td>
                                     <td>{{ $a->kategori }}</td>
                                     
@@ -135,6 +135,12 @@
                                     </td>
 
                                     <td><code>{{ $a->nomor_tiket }}</code></td>
+
+                                    <td class="text-center">
+                                        <a href="{{ route('aduan.publik.detail', $a->id) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye me-1"></i> Lihat Detail
+                                        </a>
+                                    </td>
 
                                     <td class="text-center">
                                         <form action="{{ route('aduan.destroy', $a->id) }}" 

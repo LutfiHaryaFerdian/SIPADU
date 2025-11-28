@@ -204,7 +204,7 @@
             </div>
 
             <div class="mt-4">
-                <a href="{{ route('aduan.publik') }}" class="btn btn-outline-secondary">← Kembali</a>
+                <a href="{{ route('aduan.index') }}" class="btn btn-outline-secondary">← Kembali</a>
             </div>
         </div>
     </div>
