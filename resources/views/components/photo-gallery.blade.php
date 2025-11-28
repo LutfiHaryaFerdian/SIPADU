@@ -5,6 +5,11 @@
     'modalId' => 'buktiGalleryModal' . uniqid(),
 ])
 
+@php
+    $carouselId = 'carousel' . uniqid();
+    $openTabBtnId = 'openTabBtn' . uniqid();
+@endphp
+
 @if(!empty($fotoBuktiArray) && count($fotoBuktiArray) > 0)
     <!-- Icon Mata untuk Foto Bukti (Multiple) -->
     <a href="#" 
@@ -27,7 +32,7 @@
                 </div>
                 <div class="modal-body">
                     <!-- Carousel untuk Multiple Foto -->
-                    <div id="carousel{{ uniqid() }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+                    <div id="{{ $carouselId }}" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
                         <div class="carousel-inner">
                             @foreach($fotoBuktiArray as $index => $foto)
                                 <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
@@ -43,11 +48,11 @@
 
                         <!-- Navigation Buttons (hanya tampil jika lebih dari 1 foto) -->
                         @if(count($fotoBuktiArray) > 1)
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ uniqid() }}" data-bs-slide="prev">
+                            <button class="carousel-control-prev" type="button" data-bs-target="#{{ $carouselId }}" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Previous</span>
                             </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ uniqid() }}" data-bs-slide="next">
+                            <button class="carousel-control-next" type="button" data-bs-target="#{{ $carouselId }}" data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="visually-hidden">Next</span>
                             </button>
@@ -59,7 +64,7 @@
                         <div class="mt-3 d-flex gap-2 overflow-x-auto pb-2" style="flex-wrap: wrap;">
                             @foreach($fotoBuktiArray as $index => $foto)
                                 <button type="button" class="btn btn-sm p-0 border-2" 
-                                    data-bs-target="#carousel{{ uniqid() }}" 
+                                    data-bs-target="#{{ $carouselId }}" 
                                     data-bs-slide-to="{{ $index }}"
                                     class="{{ $index === 0 ? 'active' : '' }}">
                                     <img src="{{ $foto }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
@@ -70,7 +75,7 @@
                 </div>
                 <div class="modal-footer">
                     <!-- Tombol Buka Tab Baru per Foto (Dynamic) -->
-                    <a href="{{ $fotoBuktiArray[0] }}" target="_blank" id="openTabBtn{{ uniqid() }}" class="btn btn-primary">
+                    <a href="{{ $fotoBuktiArray[0] }}" target="_blank" id="{{ $openTabBtnId }}" class="btn btn-primary">
                         <i class="bi bi-box-arrow-up-right me-1"></i> Buka Foto di Tab Baru
                     </a>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -82,16 +87,15 @@
     <script>
     // Update tombol "Buka di Tab Baru" saat carousel berubah
     document.addEventListener('DOMContentLoaded', function() {
-        const carousel = document.querySelector('#{{ $modalId }} .carousel');
-        if (carousel) {
-            const openTabBtn = document.querySelector('#{{ $modalId }} #openTabBtn{{ uniqid() }}');
-            const fotos = @json($fotoBuktiArray);
-            
-            bootstrap.Carousel.getInstance(carousel)?.dispose();
-            const carouselInstance = new bootstrap.Carousel(carousel, { interval: false });
+        const carousel = document.getElementById('{{ $carouselId }}');
+        const openTabBtn = document.getElementById('{{ $openTabBtnId }}');
+        const fotos = @json($fotoBuktiArray);
+        
+        if (carousel && openTabBtn) {
+            const carouselInstance = new bootstrap.Carousel(carousel, { interval: false, keyboard: true });
             
             carousel.addEventListener('slide.bs.carousel', function(event) {
-                if (openTabBtn && fotos[event.to]) {
+                if (fotos[event.to]) {
                     openTabBtn.href = fotos[event.to];
                 }
             });

@@ -41,6 +41,24 @@ class AdminController extends Controller
         return view('admin.aduan_index', compact('aduan', 'picUnits'));
     }
 
+    // 🔍 Detail aduan untuk admin (validasi)
+    public function detailAduan($id)
+    {
+        $aduan = DB::table('aduan')
+            ->leftJoin('mahasiswa', 'aduan.id_mahasiswa', '=', 'mahasiswa.id')
+            ->where('aduan.id', $id)
+            ->select('aduan.*', 'mahasiswa.nama as nama_mahasiswa', 'mahasiswa.npm', 'mahasiswa.email')
+            ->first();
+
+        if (!$aduan) {
+            return back()->with('error', 'Aduan tidak ditemukan.');
+        }
+
+        $picUnits = DB::table('pic_units')->get();
+
+        return view('admin.aduan_detail', compact('aduan', 'picUnits'));
+    }
+
     // 🧩 Menugaskan aduan ke PIC
     public function assignToPic(Request $request, $id)
     {

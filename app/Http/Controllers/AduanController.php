@@ -107,7 +107,7 @@ class AduanController extends Controller
     public function publicDetail($id)
     {
         $aduan = DB::table('aduan')
-            ->select('id','judul','kategori','status','nomor_tiket','created_at','deskripsi','foto_ktm','foto_bukti','foto_url','id_mahasiswa')
+            ->select('id','judul','kategori','status','nomor_tiket','created_at','deskripsi','foto_ktm','foto_bukti','foto_url','id_mahasiswa','status_validasi','catatan_admin')
             ->where('id', $id)
             ->first();
 

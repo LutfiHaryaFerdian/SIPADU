@@ -61,7 +61,10 @@
                         <tbody>
                             @foreach($aduan as $a)
                                 <tr>
-                                    <td class="fw-semibold">{{ $a->judul }}</td>
+                                    <td class="fw-semibold">
+                                        {{ $a->judul }}
+                                        <a href="{{ route('admin.aduan.detail', $a->id) }}" class="ms-2 text-primary" style="text-decoration: underline;">Detail Aduan</a>
+                                    </td>
                                     <td>
                                         <strong>{{ $a->nama_mahasiswa }}</strong><br>
                                         <small class="text-muted">NPM: {{ $a->npm }}</small>
@@ -105,11 +108,6 @@
                                                     <img src="{{ $a->foto_ktm }}" 
                                                          class="img-thumbnail" 
                                                          style="width: 70px; height: 70px; object-fit: cover;">
-                                                    <div class="position-absolute top-0 end-0" style="background: white; border-radius: 50%; padding: 2px; margin: -8px -8px 0 0;">
-                                                        <x-photo-viewer 
-                                                            :fotoUrl="$a->foto_ktm" 
-                                                            label="Foto KTM" />
-                                                    </div>
                                                 </div>
                                             @else
                                                 <span class="text-muted fs-6">-</span>
@@ -131,11 +129,6 @@
                                                     @if(count($fotoBuktiArray) > 1)
                                                         <span class="position-absolute bottom-0 end-0 badge bg-dark rounded-circle" style="font-size: 0.7rem; padding: 2px 4px;">+{{ count($fotoBuktiArray) - 1 }}</span>
                                                     @endif
-                                                    <div class="position-absolute top-0 end-0" style="background: white; border-radius: 50%; padding: 2px; margin: -8px -8px 0 0;">
-                                                        <x-photo-gallery 
-                                                            :fotoBuktiArray="$fotoBuktiArray" 
-                                                            label="Foto Bukti Aduan" />
-                                                    </div>
                                                 </div>
                                             @else
                                                 <span class="text-muted fs-6">-</span>
@@ -144,115 +137,9 @@
                                     </td>
                                     <td class="font-monospace">{{ $a->nomor_tiket }}</td>
                                     <td class="text-center">
-                                        @if($a->status === 'Menunggu' && $a->status_validasi === null)
-                                            <!-- Form Validasi & Penolakan -->
-                                            <div class="btn-group-vertical w-100 gap-2" role="group">
-                                                <!-- Valid Button -->
-                                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalValidate{{ $loop->index }}">
-                                                    <i class="bi bi-check-circle me-1"></i> Valid
-                                                </button>
-
-                                                <!-- Tidak Valid Button -->
-                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalReject{{ $loop->index }}">
-                                                    <i class="bi bi-x-circle me-1"></i> Tidak Valid
-                                                </button>
-                                            </div>
-
-                                            <!-- Modal Validasi -->
-                                            <div class="modal fade" id="modalValidate{{ $loop->index }}" tabindex="-1">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header bg-success text-white">
-                                                            <h5 class="modal-title">Validasi Aduan</h5>
-                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <form action="{{ route('admin.aduan.validate', $a->id) }}" method="POST">
-                                                            @csrf
-                                                            <div class="modal-body">
-                                                                <p><strong>Judul:</strong> {{ $a->judul }}</p>
-                                                                <div class="mb-3">
-                                                                    <label for="catatanValid{{ $loop->index }}" class="form-label">Catatan Validasi <span class="text-danger">*</span></label>
-                                                                    <textarea name="catatan_admin" id="catatanValid{{ $loop->index }}" class="form-control border-success" rows="4" placeholder="Jelaskan alasan mengapa aduan ini valid..." required></textarea>
-                                                                    <small class="text-muted">Catatan akan ditampilkan kepada pelapor dan publik</small>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                                <button type="submit" class="btn btn-success">
-                                                                    <i class="bi bi-check-circle me-1"></i> Validasi Sebagai Valid
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Modal Penolakan -->
-                                            <div class="modal fade" id="modalReject{{ $loop->index }}" tabindex="-1">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header bg-danger text-white">
-                                                            <h5 class="modal-title">Tolak Aduan</h5>
-                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <form action="{{ route('admin.aduan.reject', $a->id) }}" method="POST">
-                                                            @csrf
-                                                            <div class="modal-body">
-                                                                <p><strong>Judul:</strong> {{ $a->judul }}</p>
-                                                                <div class="mb-3">
-                                                                    <label for="catatanReject{{ $loop->index }}" class="form-label">Catatan Penolakan <span class="text-danger">*</span></label>
-                                                                    <textarea name="catatan_admin" id="catatanReject{{ $loop->index }}" class="form-control border-danger" rows="4" placeholder="Jelaskan alasan mengapa aduan ini ditolak..." required></textarea>
-                                                                    <small class="text-muted">Catatan akan ditampilkan kepada pelapor dan publik</small>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                                <button type="submit" class="btn btn-danger">
-                                                                    <i class="bi bi-x-circle me-1"></i> Tolak Aduan
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        @elseif($a->status === 'Menunggu' && $a->status_validasi === 'Valid')
-                                            <!-- Assign to PIC (hanya jika sudah Valid) -->
-                                            <form action="{{ route('admin.aduan.assign', $a->id) }}" method="POST" class="p-2 bg-light rounded shadow-sm">
-                                                @csrf
-                                                <div class="mb-2">
-                                                    <select name="id_pic" class="form-select form-select-sm border-danger" required>
-                                                        <option value="">Pilih PIC Unit</option>
-                                                        @foreach($picUnits as $p)
-                                                            <option value="{{ $p->id }}">{{ $p->nama_unit }} - {{ $p->nama_pic }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="mb-2">
-                                                    <textarea name="catatan" placeholder="Catatan (opsional)" class="form-control form-control-sm border-danger" rows="2"></textarea>
-                                                </div>
-                                                <button type="submit" class="btn btn-sm btn-danger w-100">
-                                                    <i class="bi bi-send-fill me-1"></i> Tugaskan ke PIC
-                                                </button>
-                                            </form>
-
-                                        @elseif($a->status === 'Menunggu' && $a->status_validasi === 'Tidak Valid')
-                                            <span class="text-danger fw-semibold">
-                                                <i class="bi bi-x-circle me-1"></i> Ditolak
-                                            </span>
-
-                                        @elseif($a->status === 'Diproses')
-                                            <form action="{{ route('admin.aduan.done', $a->id) }}" method="POST">
-                                                @csrf
-                                                <button class="btn btn-sm btn-success w-100 shadow-sm">
-                                                    <i class="bi bi-check2-circle me-1"></i> Tandai Selesai
-                                                </button>
-                                            </form>
-                                        @else
-                                            <span class="text-success fw-semibold">
-                                                <i class="bi bi-check-circle me-1"></i> Selesai
-                                            </span>
-                                        @endif
+                                        <a href="{{ route('admin.aduan.detail', $a->id) }}" class="btn btn-sm btn-primary">
+                                            <i class="bi bi-eye me-1"></i> Lihat Detail
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

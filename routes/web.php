@@ -49,6 +49,7 @@ Route::middleware('admin')->group(function () {
 
     // Manajemen Aduan
     Route::get('/admin/aduan', [AdminController::class, 'indexAduan'])->name('admin.aduan.index');
+    Route::get('/admin/aduan/{id}/detail', [AdminController::class, 'detailAduan'])->name('admin.aduan.detail');
     Route::post('/admin/aduan/{id}/validate', [AdminController::class, 'validateAduan'])->name('admin.aduan.validate');
     Route::post('/admin/aduan/{id}/reject', [AdminController::class, 'rejectAduan'])->name('admin.aduan.reject');
     Route::post('/admin/aduan/{id}/assign', [AdminController::class, 'assignToPic'])->name('admin.aduan.assign');
