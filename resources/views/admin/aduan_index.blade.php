@@ -7,10 +7,6 @@
 
     <!-- Header -->
     <div class="text-center mb-5">
-        <img src="https://cdn-icons-png.flaticon.com/512/4727/4727424.png" 
-             alt="Manajemen Aduan" 
-             class="img-fluid mb-3" 
-             style="max-height: 120px;">
         <h2 class="fw-bold text-danger">
             <i class="bi bi-chat-left-text me-2"></i>Manajemen Aduan Mahasiswa
         </h2>

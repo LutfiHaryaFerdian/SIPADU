@@ -6,8 +6,6 @@
 <div class="container my-5">
     <!-- Hero Section -->
     <div class="text-center mb-5">
-        <img src="https://cdn-icons-png.flaticon.com/512/3588/3588700.png" 
-             alt="Buat Aduan" class="img-fluid mb-3" style="max-height: 120px;">
         <h2 class="fw-bold text-primary">Buat Aduan Baru</h2>
         <p class="text-muted">Sampaikan permasalahan Anda secara jelas agar dapat segera ditindaklanjuti.</p>
     </div>
