@@ -48,6 +48,7 @@
                                 <th>Judul</th>
                                 <th>Kategori</th>
                                 <th>Status</th>
+                                <th>Validasi</th>
                                 <th>Foto</th>
                                 <th>Nomor Tiket</th>
                                 <th class="text-center">Aksi</th>
@@ -71,6 +72,22 @@
                                             @endif">
                                             {{ $a->status }}
                                         </span>
+                                    </td>
+
+                                    <td>
+                                        @if($a->status_validasi === null)
+                                            <span class="badge bg-dark">
+                                                <i class="bi bi-question-circle me-1"></i>Belum
+                                            </span>
+                                        @elseif($a->status_validasi === 'Valid')
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle-fill me-1"></i>Valid
+                                            </span>
+                                        @else
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-circle-fill me-1"></i>Tolak
+                                            </span>
+                                        @endif
                                     </td>
 
                                     <!-- FOTO KTM & BUKTI -->

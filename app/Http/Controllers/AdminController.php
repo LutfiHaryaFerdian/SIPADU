@@ -48,10 +48,14 @@ class AdminController extends Controller
             'id_pic' => 'required|uuid',
         ]);
 
-        // Cek apakah aduan ada
+        // Cek apakah aduan ada dan sudah valid
         $aduan = DB::table('aduan')->where('id', $id)->first();
         if (!$aduan) {
             return back()->with('error', 'Aduan tidak ditemukan.');
+        }
+
+        if ($aduan->status_validasi !== 'Valid') {
+            return back()->with('error', 'Aduan harus divalidasi terlebih dahulu sebelum ditugaskan.');
         }
 
         // Buat penugasan
@@ -69,6 +73,48 @@ class AdminController extends Controller
         DB::table('aduan')->where('id', $id)->update(['status' => 'Diproses']);
 
         return back()->with('success', 'Aduan berhasil ditugaskan ke PIC.');
+    }
+
+    // ✅ Validasi aduan (Valid)
+    public function validateAduan(Request $request, $id)
+    {
+        $request->validate([
+            'catatan_admin' => 'required|string|max:1000',
+        ]);
+
+        $aduan = DB::table('aduan')->where('id', $id)->first();
+        if (!$aduan) {
+            return back()->with('error', 'Aduan tidak ditemukan.');
+        }
+
+        DB::table('aduan')->where('id', $id)->update([
+            'status_validasi' => 'Valid',
+            'catatan_admin' => $request->catatan_admin,
+            'updated_at' => now(),
+        ]);
+
+        return back()->with('success', 'Aduan berhasil divalidasi sebagai Valid.');
+    }
+
+    // ❌ Tolak aduan (Tidak Valid)
+    public function rejectAduan(Request $request, $id)
+    {
+        $request->validate([
+            'catatan_admin' => 'required|string|max:1000',
+        ]);
+
+        $aduan = DB::table('aduan')->where('id', $id)->first();
+        if (!$aduan) {
+            return back()->with('error', 'Aduan tidak ditemukan.');
+        }
+
+        DB::table('aduan')->where('id', $id)->update([
+            'status_validasi' => 'Tidak Valid',
+            'catatan_admin' => $request->catatan_admin,
+            'updated_at' => now(),
+        ]);
+
+        return back()->with('success', 'Aduan berhasil ditolak.');
     }
 
     // 🧾 Ubah status aduan jadi selesai
