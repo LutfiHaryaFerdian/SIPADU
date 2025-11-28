@@ -4,110 +4,168 @@
 
 @section('content')
 <div class="container my-5">
-    <div class="text-center mb-4">
-        <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png"
-             alt="Tindak Lanjut" class="img-fluid mb-3" style="max-height: 110px;">
+
+    <!-- Tombol Kembali + Header -->
+    <div class="mb-4">
+        <a href="{{ route('pic.aduan.index') }}" class="btn btn-outline-secondary mb-3">
+            <i class="bi bi-arrow-left me-1"></i> Kembali
+        </a>
         <h2 class="fw-bold text-warning mb-1">
-            <i class="bi bi-pencil-square me-2"></i>Tindak Lanjut Aduan
+            <i class="bi bi-pencil-square me-2"></i> Tindak Lanjut Aduan
         </h2>
-        <p class="text-muted">Catat progres dan ubah status penyelesaian aduan mahasiswa.</p>
     </div>
 
-    <div class="card shadow-lg border-0 mx-auto" style="max-width: 700px;">
-        <div class="card-header bg-warning text-dark text-center fw-semibold">
-            <i class="bi bi-clipboard-check me-2"></i>Formulir Tindak Lanjut
-        </div>
-        <div class="card-body p-4">
-            {{-- Info Aduan --}}
-            <div class="mb-4 border-start border-4 border-warning ps-3">
-                <p class="mb-1"><strong>Judul:</strong> {{ $aduan->judul }}</p>
-                <p class="mb-1"><strong>Kategori:</strong> {{ $aduan->kategori }}</p>
+    <div class="row">
+        <!-- Kolom Kiri: Informasi Aduan + Foto -->
+        <div class="col-md-8">
+
+            <!-- Card Informasi Aduan -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-warning text-dark fw-semibold">
+                    <h5 class="mb-0">{{ $aduan->judul }}</h5>
+                </div>
+                <div class="card-body">
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Kategori:</strong></p>
+                            <p>{{ $aduan->kategori }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Status Saat Ini:</strong></p>
+                            <span class="badge 
+                                @if($aduan->status === 'Menunggu') bg-secondary
+                                @elseif($aduan->status === 'Diproses') bg-warning text-dark
+                                @else bg-success @endif fs-6">
+                                {{ $aduan->status }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <p class="mb-1"><strong>Deskripsi:</strong></p>
+                    <div class="p-3 bg-light border rounded">
+                        {{ $aduan->deskripsi }}
+                    </div>
+                </div>
             </div>
 
-            {{-- Tampilkan catatan sebelumnya jika ada --}}
+            <!-- Foto Bukti -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-info text-white fw-semibold">
+                    <h5 class="mb-0"><i class="bi bi-images me-2"></i>Foto Bukti Aduan</h5>
+                </div>
+                <div class="card-body">
+                    @php
+                        $fotoBuktiArray = is_string($aduan->foto_bukti) ? json_decode($aduan->foto_bukti, true) : ($aduan->foto_bukti ?? []);
+                    @endphp
+                    @if(!empty($fotoBuktiArray) && count($fotoBuktiArray) > 0)
+                        <div class="row g-3">
+                            @foreach($fotoBuktiArray as $index => $foto)
+                                <div class="col-md-6">
+                                    <div class="card border">
+                                        <img src="{{ $foto }}" alt="Foto Bukti {{ $index + 1 }}" class="card-img-top" style="height: 250px; object-fit: cover;">
+                                        <div class="card-footer bg-light">
+                                            <small class="text-muted">Foto Bukti {{ $index + 1 }} dari {{ count($fotoBuktiArray) }}</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="alert alert-warning mb-0">
+                            <i class="bi bi-exclamation-triangle me-2"></i>Foto bukti tidak tersedia
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Catatan Tindak Lanjut Sebelumnya -->
             @if($tindakLanjutTerbaru)
-                <div class="mb-4 p-3 bg-light border-start border-4 border-info rounded">
-                    <h6 class="fw-semibold mb-2"><i class="bi bi-info-circle me-2"></i>Catatan Terbaru</h6>
-                    <p class="mb-1"><strong>Status:</strong> 
-                        <span class="badge {{ $tindakLanjutTerbaru->status === 'Sedang Dikerjakan' ? 'bg-warning text-dark' : 'bg-success' }}">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-secondary text-white fw-semibold">
+                        <h5 class="mb-0">Catatan Terbaru</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Status:</strong></p>
+                        <span class="badge 
+                            {{ $tindakLanjutTerbaru->status === 'Sedang Dikerjakan' ? 'bg-warning text-dark' : 'bg-success' }}">
                             {{ $tindakLanjutTerbaru->status }}
                         </span>
-                    </p>
-                    <p class="mb-2"><strong>Catatan:</strong></p>
-                    <div class="p-2 bg-white border rounded">{{ $tindakLanjutTerbaru->catatan }}</div>
+
+                        <hr>
+
+                        <p class="mb-1"><strong>Catatan:</strong></p>
+                        <div class="p-3 bg-light border rounded">
+                            {{ $tindakLanjutTerbaru->catatan }}
+                        </div>
+                    </div>
                 </div>
             @endif
+        </div>
 
-            {{-- Form --}}
-            <form method="POST" action="{{ route('pic.tindaklanjut.store', $aduan->id) }}">
-                @csrf
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Catatan Tindak Lanjut Sedang Dikerjakan</label>
-                    <textarea name="catatan" class="form-control shadow-sm" rows="4" 
-                              placeholder="Tuliskan progres atau hasil tindak lanjut saat ini..." required></textarea>
-                    <small class="text-muted">Catatan ini masih dapat diubah sebelum menandai selesai.</small>
+        <!-- Kolom Kanan: Form Tindak Lanjut -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-warning text-dark fw-semibold">
+                    <h5 class="mb-0">Form Tindak Lanjut</h5>
                 </div>
+                <div class="card-body">
 
-                <div class="mb-4">
-                    <label class="form-label fw-semibold">Status</label>
-                    <select name="status" class="form-select shadow-sm" required>
-                        <option value="">-- Pilih Status --</option>
-                        <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
-                        <option value="Selesai">Selesai</option>
-                    </select>
-                </div>
+                    <form method="POST" action="{{ route('pic.tindaklanjut.store', $aduan->id) }}">
+                        @csrf
 
-                {{-- Catatan Selesai hanya jika memilih Selesai --}}
-                <div class="mb-4" id="catatanSelesaiDiv" style="display: none;">
-                    <label class="form-label fw-semibold">Catatan Penyelesaian</label>
-                    <textarea id="catatanSelesai" name="catatan_selesai" class="form-control shadow-sm" rows="4" 
-                              placeholder="Tuliskan ringkasan hasil penyelesaian..."></textarea>
-                    <small class="text-muted">Catatan ini akan disimpan setelah status diubah menjadi selesai.</small>
-                </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Catatan Progres</label>
+                            <textarea name="catatan" class="form-control border-warning shadow-sm" rows="4"
+                                      placeholder="Tuliskan progres pekerjaan..." required></textarea>
+                        </div>
 
-                @if($aduan->foto_url)
-                <div class="mb-3 text-center">
-                    <img src="{{ $aduan->foto_url }}" 
-                        class="img-fluid rounded shadow"
-                        style="max-height: 250px;">
-                </div>
-                @endif
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Status</label>
+                            <select name="status" id="statusSelect" class="form-select border-warning shadow-sm" required>
+                                <option value="">-- Pilih Status --</option>
+                                <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
+                                <option value="Selesai">Selesai</option>
+                            </select>
+                        </div>
 
-                <div class="d-flex justify-content-between align-items-center">
-                    <a href="{{ route('pic.aduan.index') }}" class="btn btn-outline-secondary shadow-sm">
-                        <i class="bi bi-arrow-left-circle me-1"></i> Kembali
-                    </a>
-                    <button type="submit" class="btn btn-warning text-white shadow-sm fw-semibold">
-                        <i class="bi bi-save me-1"></i> Simpan
-                    </button>
+                        <div class="mb-3" id="catatanSelesaiDiv" style="display: none;">
+                            <label class="form-label fw-semibold">Catatan Penyelesaian</label>
+                            <textarea name="catatan_selesai" id="catatanSelesai" class="form-control border-success"
+                                      rows="4" placeholder="Ringkasan penyelesaian..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-warning text-white w-100 fw-semibold shadow-sm">
+                            <i class="bi bi-save me-1"></i> Simpan Tindak Lanjut
+                        </button>
+                    </form>
+
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-document.querySelector('select[name="status"]').addEventListener('change', function() {
-    const catatanSelesaiDiv = document.getElementById('catatanSelesaiDiv');
+document.getElementById('statusSelect').addEventListener('change', function() {
+    const selesai = document.getElementById('catatanSelesaiDiv');
+    const input = document.getElementById('catatanSelesai');
+
     if (this.value === 'Selesai') {
-        catatanSelesaiDiv.style.display = 'block';
-        document.getElementById('catatanSelesai').required = true;
+        selesai.style.display = 'block';
+        input.required = true;
     } else {
-        catatanSelesaiDiv.style.display = 'none';
-        document.getElementById('catatanSelesai').required = false;
+        selesai.style.display = 'none';
+        input.required = false;
     }
 });
 </script>
 
 <style>
 .card:hover {
-    transform: translateY(-4px);
-    transition: 0.3s ease;
-    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
-}
-.form-control:focus, .form-select:focus {
-    border-color: #ffcd39;
-    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.3);
+    transition: 0.3s;
+    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.25);
 }
 </style>
+
 @endsection
