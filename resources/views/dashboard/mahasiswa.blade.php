@@ -1,12 +1,9 @@
 @extends('layouts.mahasiswa')
-
 @section('title', 'SIPADU - Dashboard Mahasiswa')
-
 @section('content')
 @php
     use Illuminate\Support\Facades\DB;
     use Carbon\Carbon;
-
     $aduanTerbaru = DB::table('aduan')
         ->where('id_mahasiswa', session('mahasiswa')->id)
         ->orderBy('created_at', 'desc')
@@ -17,7 +14,6 @@
 <!-- 🔹 Hero Section -->
 <section class="hero-section position-relative text-white">
     <div class="hero-overlay"></div>
-
     <div class="container position-relative">
         <div class="row align-items-center justify-content-center min-vh-50">
             <div class="col-lg-7 text-start">
@@ -25,7 +21,7 @@
                     Halo, {{ session('mahasiswa')->nama }}! 👋
                 </h1>
                 <p class="mb-4 fs-5">
-                    Selamat datang di <strong>SIPADU Universitas Lampung</strong>.<br>
+                    Selamat datang di <strong>SIPADU Universitas Lampung</strong>.
                     Laporkan, pantau, dan tindak lanjuti aduan Anda dengan mudah.
                 </p>
                 <a href="/mahasiswa/aduan/create" class="btn btn-primary me-2">
@@ -42,7 +38,6 @@
     </div>
 </section>
 
-
 <!-- 🔹 Statistik Ringkas -->
 <div class="container my-5">
     <div class="row g-4">
@@ -55,7 +50,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-4">
             <div class="card text-center border-0 shadow-sm h-100 role-card bg-warning text-white">
                 <div class="card-body p-4">
@@ -65,7 +59,6 @@
                 </div>
             </div>
         </div>
-
         <div class="col-md-4">
             <div class="card text-center border-0 shadow-sm h-100 role-card bg-success text-white">
                 <div class="card-body p-4">
@@ -101,27 +94,21 @@
                         </thead>
                         <tbody>
                             @foreach($aduanTerbaru as $a)
-                                <tr>
-                                    <td>
-                                        {{ $a->judul }}
-                                    </td>
-                                    <td>{{ $a->kategori }}</td>
-                                    <td>
-                                        <span class="badge 
-                                            @if($a->status == 'Diproses') bg-warning text-dark
-                                            @elseif($a->status == 'Selesai') bg-success
-                                            @elseif($a->status == 'Ditolak') bg-danger text-white
-                                            @else bg-secondary @endif">
-                                            {{ $a->status }}
-                                        </span>
-                                    </td>
-                                    <td>{{ Carbon::parse($a->created_at)->format('d M Y') }}</td>
-                                    <td class="text-center">
-                                        <a href="{{ route('aduan.publik.detail', $a->id) }}" class="btn btn-sm btn-primary">
-                                            <i class="bi bi-eye me-1"></i> Lihat Detail
-                                        </a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td>{{ $a->judul }}</td>
+                                <td>{{ $a->kategori }}</td>
+                                <td>
+                                    <span class="badge @if($a->status == 'Diproses') bg-warning text-dark @elseif($a->status == 'Selesai') bg-success @elseif($a->status == 'Ditolak') bg-danger text-white @else bg-secondary @endif">
+                                        {{ $a->status }}
+                                    </span>
+                                </td>
+                                <td>{{ Carbon::parse($a->created_at)->format('d M Y') }}</td>
+                                <td class="text-center">
+                                    <a href="{{ route('aduan.publik.detail', $a->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-eye me-1"></i> Lihat Detail
+                                    </a>
+                                </td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -133,39 +120,45 @@
 
 <style>
     .hero-section {
-    background: url('https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1500&q=80') center center / cover no-repeat;
-    min-height: 420px;
-    display: flex;
-    align-items: center;
-    position: relative;
-}
+        background: url('{{ asset("images/mahasiswadb.jpeg") }}') center center / cover no-repeat;
+        min-height: 420px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        margin-top: -56px;
+        margin-bottom: 0;
+    }
 
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        rgba(0,0,0,0.6),
-        rgba(0,0,0,0.6)
-    );
-    z-index: 1;
-}
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            rgba(0,0,0,0.6),
+            rgba(0,0,0,0.6)
+        );
+        z-index: 1;
+    }
 
-.hero-section .container {
-    z-index: 2;
-}
+    .hero-section .container {
+        z-index: 2;
+    }
 
-.min-vh-50 {
-    min-height: 420px;
-}
-.role-card {
-    transition: all 0.3s ease;
-}
-.role-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-}
+    .min-vh-50 {
+        min-height: 420px;
+    }
+
+    .role-card {
+        transition: all 0.3s ease;
+    }
+
+    .role-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
 </style>
 @endsection

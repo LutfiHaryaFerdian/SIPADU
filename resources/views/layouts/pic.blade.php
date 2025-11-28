@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'PIC Unit - SIPADU')
-
 @section('navbar')
-<nav class="navbar navbar-expand-lg navbar-dark shadow-sm" style="background: linear-gradient(90deg, #ffca2c, #ffc107);">
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm fixed-top" style="background: linear-gradient(90deg, #ffca2c, #ffc107);">
     <div class="container-fluid px-4">
         <!-- 🔸 Logo -->
         <a class="navbar-brand fw-semibold text-dark d-flex align-items-center" href="/pic/dashboard">
