@@ -14,7 +14,7 @@ class CreateAduanTable extends Migration
             $table->string('judul');
             $table->text('deskripsi');
             $table->string('kategori');
-            $table->enum('status', ['Menunggu', 'Diproses', 'Selesai'])->default('Menunggu');
+            $table->enum('status', ['Menunggu', 'Diproses', 'Selesai','Ditolak'])->default('Menunggu');
             $table->string('nomor_tiket')->unique();
             $table->timestamps();
 
