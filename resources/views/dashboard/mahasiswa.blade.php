@@ -15,34 +15,33 @@
 @endphp
 
 <!-- 🔹 Hero Section -->
-<section class="py-5 text-center bg-light position-relative overflow-hidden">
+<section class="hero-section position-relative text-white">
+    <div class="hero-overlay"></div>
+
     <div class="container position-relative">
-        <div class="row align-items-center justify-content-center">
-            <div class="col-lg-6 text-start">
-                <h1 class="fw-bold text-primary mb-2">
+        <div class="row align-items-center justify-content-center min-vh-50">
+            <div class="col-lg-7 text-start">
+                <h1 class="fw-bold mb-3 display-5">
                     Halo, {{ session('mahasiswa')->nama }}! 👋
                 </h1>
-                <p class="text-muted mb-4">
+                <p class="mb-4 fs-5">
                     Selamat datang di <strong>SIPADU Universitas Lampung</strong>.<br>
                     Laporkan, pantau, dan tindak lanjuti aduan Anda dengan mudah.
                 </p>
                 <a href="/mahasiswa/aduan/create" class="btn btn-primary me-2">
                     <i class="bi bi-plus-circle me-1"></i> Buat Aduan Baru
                 </a>
-                <a href="/mahasiswa/aduan" class="btn btn-outline-primary">
-                    <i class="bi bi-journal-text me-1"></i> Lihat Aduan Saya
+                <a href="/mahasiswa/aduan" class="btn btn-outline-light me-2">
+                    <i class="bi bi-journal-text me-1"></i> Aduan Saya
                 </a>
-                <a href="/mahasiswa/aduan-publik" class="btn btn-outline-primary">
-                    <i class="bi bi-globe2 me-2"></i> Lihat Aduan Publik
+                <a href="/mahasiswa/aduan-publik" class="btn btn-outline-light">
+                    <i class="bi bi-globe2 me-2"></i> Aduan Publik
                 </a>
-            </div>
-            <div class="col-lg-5 text-center d-none d-lg-block">
-                <img src="https://cdn-icons-png.flaticon.com/512/9019/9019781.png" 
-                     alt="Mahasiswa Illustration" class="img-fluid" style="max-height: 280px;">
             </div>
         </div>
     </div>
 </section>
+
 
 <!-- 🔹 Statistik Ringkas -->
 <div class="container my-5">
@@ -133,6 +132,34 @@
 </div>
 
 <style>
+    .hero-section {
+    background: url('https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1500&q=80') center center / cover no-repeat;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        rgba(0,0,0,0.6),
+        rgba(0,0,0,0.6)
+    );
+    z-index: 1;
+}
+
+.hero-section .container {
+    z-index: 2;
+}
+
+.min-vh-50 {
+    min-height: 420px;
+}
 .role-card {
     transition: all 0.3s ease;
 }
