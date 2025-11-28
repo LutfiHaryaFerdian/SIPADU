@@ -31,8 +31,34 @@
                     <div class="p-3 bg-light border rounded">{{ $aduan->deskripsi }}</div><br>
                     <h6 class="fw-semibold">Catatan PIC Unit</h6>
                     <div class="p-3 bg-white border rounded">
+                        @if($aduan->status_validasi !== null)
+                            <div class="mb-3">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    @if($aduan->status_validasi === 'Valid')
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle-fill me-1"></i>Validasi: Valid
+                                        </span>
+                                    @else
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-x-circle-fill me-1"></i>Validasi: Tidak Valid
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="p-3 bg-light border rounded">
+                                    <strong>Catatan Admin:</strong>
+                                    <p class="mb-0 mt-2">{{ $aduan->catatan_admin }}</p>
+                                </div>
+                            </div>
+                        @endif
+                        
                         @if($catatanPic->isEmpty())
-                            <div class="text-muted small">Belum ada catatan dari PIC.</div>
+                            <div class="text-muted small">
+                                @if($aduan->status_validasi === null)
+                                    Menunggu validasi admin...
+                                @else
+                                    Belum ada catatan dari PIC.
+                                @endif
+                            </div>
                         @else
                             <ul class="list-unstyled small">
                                 @foreach($catatanPic as $c)

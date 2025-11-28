@@ -52,6 +52,7 @@
                                 <th>Mahasiswa</th>
                                 <th>Kategori</th>
                                 <th>Status</th>
+                                <th>Validasi</th>
                                 <th>Foto</th>
                                 <th>Nomor Tiket</th>
                                 <th class="text-center">Aksi</th>
@@ -78,6 +79,21 @@
                                         @else
                                             <span class="badge bg-success">
                                                 <i class="bi bi-check-circle-fill me-1"></i>Selesai
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($a->status_validasi === null)
+                                            <span class="badge bg-dark">
+                                                <i class="bi bi-question-circle me-1"></i>Belum
+                                            </span>
+                                        @elseif($a->status_validasi === 'Valid')
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle-fill me-1"></i>Valid
+                                            </span>
+                                        @else
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-circle-fill me-1"></i>Tidak Valid
                                             </span>
                                         @endif
                                     </td>
@@ -128,7 +144,80 @@
                                     </td>
                                     <td class="font-monospace">{{ $a->nomor_tiket }}</td>
                                     <td class="text-center">
-                                        @if($a->status === 'Menunggu')
+                                        @if($a->status === 'Menunggu' && $a->status_validasi === null)
+                                            <!-- Form Validasi & Penolakan -->
+                                            <div class="btn-group-vertical w-100 gap-2" role="group">
+                                                <!-- Valid Button -->
+                                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#modalValidate{{ $loop->index }}">
+                                                    <i class="bi bi-check-circle me-1"></i> Valid
+                                                </button>
+
+                                                <!-- Tidak Valid Button -->
+                                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalReject{{ $loop->index }}">
+                                                    <i class="bi bi-x-circle me-1"></i> Tidak Valid
+                                                </button>
+                                            </div>
+
+                                            <!-- Modal Validasi -->
+                                            <div class="modal fade" id="modalValidate{{ $loop->index }}" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-success text-white">
+                                                            <h5 class="modal-title">Validasi Aduan</h5>
+                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <form action="{{ route('admin.aduan.validate', $a->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <p><strong>Judul:</strong> {{ $a->judul }}</p>
+                                                                <div class="mb-3">
+                                                                    <label for="catatanValid{{ $loop->index }}" class="form-label">Catatan Validasi <span class="text-danger">*</span></label>
+                                                                    <textarea name="catatan_admin" id="catatanValid{{ $loop->index }}" class="form-control border-success" rows="4" placeholder="Jelaskan alasan mengapa aduan ini valid..." required></textarea>
+                                                                    <small class="text-muted">Catatan akan ditampilkan kepada pelapor dan publik</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-success">
+                                                                    <i class="bi bi-check-circle me-1"></i> Validasi Sebagai Valid
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Modal Penolakan -->
+                                            <div class="modal fade" id="modalReject{{ $loop->index }}" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header bg-danger text-white">
+                                                            <h5 class="modal-title">Tolak Aduan</h5>
+                                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <form action="{{ route('admin.aduan.reject', $a->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <p><strong>Judul:</strong> {{ $a->judul }}</p>
+                                                                <div class="mb-3">
+                                                                    <label for="catatanReject{{ $loop->index }}" class="form-label">Catatan Penolakan <span class="text-danger">*</span></label>
+                                                                    <textarea name="catatan_admin" id="catatanReject{{ $loop->index }}" class="form-control border-danger" rows="4" placeholder="Jelaskan alasan mengapa aduan ini ditolak..." required></textarea>
+                                                                    <small class="text-muted">Catatan akan ditampilkan kepada pelapor dan publik</small>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                                <button type="submit" class="btn btn-danger">
+                                                                    <i class="bi bi-x-circle me-1"></i> Tolak Aduan
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        @elseif($a->status === 'Menunggu' && $a->status_validasi === 'Valid')
+                                            <!-- Assign to PIC (hanya jika sudah Valid) -->
                                             <form action="{{ route('admin.aduan.assign', $a->id) }}" method="POST" class="p-2 bg-light rounded shadow-sm">
                                                 @csrf
                                                 <div class="mb-2">
@@ -146,6 +235,12 @@
                                                     <i class="bi bi-send-fill me-1"></i> Tugaskan ke PIC
                                                 </button>
                                             </form>
+
+                                        @elseif($a->status === 'Menunggu' && $a->status_validasi === 'Tidak Valid')
+                                            <span class="text-danger fw-semibold">
+                                                <i class="bi bi-x-circle me-1"></i> Ditolak
+                                            </span>
+
                                         @elseif($a->status === 'Diproses')
                                             <form action="{{ route('admin.aduan.done', $a->id) }}" method="POST">
                                                 @csrf
