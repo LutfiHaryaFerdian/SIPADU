@@ -1,9 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Admin - SIPADU')
-
 @section('navbar')
-<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand fw-semibold" href="/admin/dashboard">
             <i class="bi bi-shield-lock-fill me-2"></i>SIPADU Admin

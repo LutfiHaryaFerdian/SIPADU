@@ -19,6 +19,8 @@
             font-family: 'Poppins', sans-serif;
             background-color: #f8f9fa;
             color: #212529;
+            /* Add padding-top to account for fixed navbar */
+            padding-top: 56px;
         }
 
         /* Animasi halus antar halaman */
@@ -57,7 +59,8 @@
     @yield('navbar')
 
     <!-- 🔹 Konten Halaman -->
-    <main class="flex-fill container my-4">
+    <!-- Remove margin-top from main, hero section will handle positioning -->
+    <main class="flex-fill">
         @yield('content')
     </main>
 

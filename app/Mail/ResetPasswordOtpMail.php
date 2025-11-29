@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class OtpMail extends Mailable
+class ResetPasswordOtpMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -19,7 +19,7 @@ class OtpMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Kode OTP Registrasi SIPADU')
-                    ->view('emails.otp');
+        return $this->subject('OTP Reset Password SIPADU')
+                    ->view('emails.reset-password-otp');
     }
 }

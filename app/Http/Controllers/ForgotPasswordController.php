@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\MahasiswaOtp;
+use App\Mail\ResetPasswordOtpMail;
 
 class ForgotPasswordController extends Controller
 {
@@ -33,9 +34,7 @@ class ForgotPasswordController extends Controller
 
         session(['forgot_email' => $request->email]);
 
-        Mail::raw("Kode OTP reset password Anda adalah: $otp\n\nBerlaku 5 menit.", function($msg) use ($request) {
-            $msg->to($request->email)->subject('OTP Reset Password SIPADU');
-        });
+        Mail::to($request->email)->send(new ResetPasswordOtpMail($otp));
 
         return redirect()->route('forgot.verifyForm')->with('success', 'OTP sudah dikirim ke email Anda.');
     }

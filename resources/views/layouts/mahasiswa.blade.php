@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Mahasiswa - SIPADU')
-
 @section('navbar')
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
     <div class="container-fluid px-4">
@@ -43,7 +41,4 @@
         </div>
     </div>
 </nav>
-
-<!-- Tambahkan padding agar tidak ketutupan navbar -->
-<div style="padding-top: 75px;"></div>
 @endsection

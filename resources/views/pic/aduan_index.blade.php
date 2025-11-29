@@ -5,8 +5,6 @@
 @section('content')
 <div class="container my-5">
     <div class="text-center mb-5">
-        <img src="https://cdn-icons-png.flaticon.com/512/3220/3220653.png" 
-             alt="Aduan PIC" class="img-fluid mb-3" style="max-height: 120px;">
         <h2 class="fw-bold text-warning mb-1">
             <i class="bi bi-list-task me-2"></i>Aduan Ditugaskan Kepada Anda
         </h2>
