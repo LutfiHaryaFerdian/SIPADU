@@ -69,7 +69,7 @@
 
     <!-- 🔹 Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark shadow-sm py-3">
-        <div class="container">
+        <div class="d-flex justify-content-between align-items-center w-100 px-4">
             <a class="navbar-brand fw-bold fs-4" href="/">
                 <i class="bi bi-mortarboard-fill me-2"></i>SIPADU
             </a>
@@ -103,6 +103,19 @@
             <p class="text-muted mb-5">Masuk sesuai peran Anda untuk mengakses sistem SIPADU.</p>
 
             <div class="row justify-content-center g-4">
+
+                <!-- Admin -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="card role-card shadow-sm border-0 fade-in">
+                        <img src="{{ asset('images/admin.png') }}" alt="Admin SIPADU">
+                        <div class="card-body text-center">
+                            <i class="bi bi-shield-lock text-danger display-5 mb-2"></i>
+                            <h5 class="fw-semibold mb-3">Login Admin</h5>
+                            <a href="/login/admin" class="btn btn-danger w-100">Masuk</a>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Mahasiswa -->
                 <div class="col-md-4 col-lg-3">
                     <div class="card role-card shadow-sm border-0 fade-in">
@@ -127,17 +140,7 @@
                     </div>
                 </div>
 
-                <!-- Admin -->
-                <div class="col-md-4 col-lg-3">
-                    <div class="card role-card shadow-sm border-0 fade-in">
-                        <img src="{{ asset('images/admin.png') }}" alt="Admin SIPADU">
-                        <div class="card-body text-center">
-                            <i class="bi bi-shield-lock text-danger display-5 mb-2"></i>
-                            <h5 class="fw-semibold mb-3">Login Admin</h5>
-                            <a href="/login/admin" class="btn btn-danger w-100">Masuk</a>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </section>
