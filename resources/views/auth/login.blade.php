@@ -110,14 +110,16 @@
             </button>
         </form>
 
-        <div class="text-center mt-4 small">
-            <p class="text-muted mb-1">Login sebagai:</p>
-            <a href="/login/admin" class="text-danger text-decoration-none me-2 fw-semibold">Admin</a> |
-            <a href="/login/mahasiswa" class="text-primary text-decoration-none mx-2 fw-semibold">Mahasiswa</a> |
-            <a href="/login/pic" class="text-warning text-decoration-none ms-2 fw-semibold">PIC</a>
-        </div>
+        
+
+        
 
         @if($role === 'mahasiswa')
+        <div class="text-center mt-3">
+            <a href="{{ route('google.redirect') }}" class="btn btn-danger w-100">
+                <i class="bi bi-google me-2"></i> Login dengan Google
+            </a>
+        </div>
         <div class="text-center mt-3 small">
             <p class="mb-0">Belum punya akun?
                 <a href="/register" class="text-decoration-none fw-semibold text-primary">Daftar Sekarang</a>
@@ -137,6 +139,13 @@
             <p class="mb-0">Hubungi Admin untuk membuat akun PIC Unit.</p>
         </div>
         @endif
+
+        <div class="text-center mt-4 small">
+            <p class="text-muted mb-1">Login sebagai:</p>
+            <a href="/login/admin" class="text-danger text-decoration-none me-2 fw-semibold">Admin</a> |
+            <a href="/login/mahasiswa" class="text-primary text-decoration-none mx-2 fw-semibold">Mahasiswa</a> |
+            <a href="/login/pic" class="text-warning text-decoration-none ms-2 fw-semibold">PIC</a>
+        </div>
 
         <div class="text-center mt-4">
             <a href="/" class="btn btn-outline-success btn-sm">

@@ -7,11 +7,16 @@ use App\Http\Controllers\PicController;
 use App\Http\Controllers\AduanController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\Auth\GoogleController;
 
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.redirect');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
+
 // ==========================
 // FORGOT PASSWORD + OTP
 // ==========================
