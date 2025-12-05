@@ -50,7 +50,7 @@ class AdminController extends Controller
             ->select('aduan.*', 'mahasiswa.nama as nama_mahasiswa', 'mahasiswa.npm', 'mahasiswa.email')
             ->first();
 
-        if (!$aduan) {
+        if (! $aduan) {
             return back()->with('error', 'Aduan tidak ditemukan.');
         }
 
@@ -68,7 +68,7 @@ class AdminController extends Controller
 
         // Cek apakah aduan ada dan sudah valid
         $aduan = DB::table('aduan')->where('id', $id)->first();
-        if (!$aduan) {
+        if (! $aduan) {
             return back()->with('error', 'Aduan tidak ditemukan.');
         }
 
@@ -101,7 +101,7 @@ class AdminController extends Controller
         ]);
 
         $aduan = DB::table('aduan')->where('id', $id)->first();
-        if (!$aduan) {
+        if (! $aduan) {
             return back()->with('error', 'Aduan tidak ditemukan.');
         }
 
@@ -122,7 +122,7 @@ class AdminController extends Controller
         ]);
 
         $aduan = DB::table('aduan')->where('id', $id)->first();
-        if (!$aduan) {
+        if (! $aduan) {
             return back()->with('error', 'Aduan tidak ditemukan.');
         }
 
@@ -140,6 +140,99 @@ class AdminController extends Controller
     public function markAsDone($id)
     {
         DB::table('aduan')->where('id', $id)->update(['status' => 'Selesai']);
+
         return back()->with('success', 'Aduan berhasil ditandai sebagai selesai.');
+    }
+
+    public function indexMahasiswa(Request $request)
+    {
+        $search = $request->search;
+
+        $mahasiswa = DB::table('mahasiswa')
+            ->when($search, function ($query) use ($search) {
+                $query->where('nama', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%");
+            })
+            ->orderBy('nama')
+            ->get();
+
+        return view('admin.mahasiswa_index', compact('mahasiswa'));
+    }
+
+    public function detailMahasiswa($id)
+    {
+        $mhs = DB::table('mahasiswa')->where('id', $id)->first();
+
+        if (! $mhs) {
+            return back()->with('error', 'Mahasiswa tidak ditemukan.');
+        }
+
+        return view('admin.mahasiswa_detail', compact('mhs'));
+    }
+
+    public function editMahasiswa($id)
+    {
+        $mhs = DB::table('mahasiswa')->where('id', $id)->first();
+
+        if (! $mhs) {
+            return back()->with('error', 'Mahasiswa tidak ditemukan.');
+        }
+
+        return view('admin.mahasiswa_edit', compact('mhs'));
+    }
+
+    public function deleteMahasiswa($id)
+    {
+        DB::table('mahasiswa')->where('id', $id)->delete();
+
+        return back()->with('success', 'Mahasiswa berhasil dihapus.');
+    }
+
+    public function updateMahasiswa(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email',
+            'npm' => 'required|string|max:50',
+            'prodi' => 'required|string|max:100',
+            'no_hp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string|max:255',
+            'foto_profile' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+        ]);
+
+        // Ambil data mahasiswa lama
+        $mahasiswa = DB::table('mahasiswa')->where('id', $id)->first();
+        if (! $mahasiswa) {
+            return back()->with('error', 'Mahasiswa tidak ditemukan.');
+        }
+
+        // Upload foto baru jika ada
+        $fotoUrl = $mahasiswa->foto_profile; // default: foto lama
+
+        if ($request->hasFile('foto_profile')) {
+            $uploadedFile = $request->file('foto_profile');
+
+            // Upload ke Cloudinary
+            $upload = Cloudinary::upload($uploadedFile->getRealPath(), [
+                'folder' => 'sipadu_mahasiswa',
+            ]);
+
+            $fotoUrl = $upload->getSecurePath();
+        }
+
+        // Update ke database
+        DB::table('mahasiswa')->where('id', $id)->update([
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'npm' => $request->npm,
+            'prodi' => $request->prodi,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'foto_profile' => $fotoUrl,
+            'updated_at' => now(),
+        ]);
+
+        return redirect()->route('admin.mahasiswa.index')->with('success', 'Data mahasiswa berhasil diperbarui.');
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 
 class AduanController extends Controller
 {
@@ -45,7 +45,7 @@ class AduanController extends Controller
             $uploadedFile = Cloudinary::upload($request->file('foto_ktm')->getRealPath(), [
                 'folder' => 'sipadu/aduan/ktm',
                 'quality' => 'auto',
-                'fetch_format' => 'auto'
+                'fetch_format' => 'auto',
             ]);
             $fotoKtmUrl = $uploadedFile->getSecurePath();
         }
@@ -53,18 +53,18 @@ class AduanController extends Controller
         // Upload multiple foto bukti dengan parallel processing (max 5)
         if ($request->hasFile('foto_bukti')) {
             $uploadTasks = [];
-            
+
             foreach ($request->file('foto_bukti') as $fotoBukti) {
                 $uploadTasks[] = $fotoBukti->getRealPath();
             }
-            
+
             // Batch upload untuk kecepatan - upload max 3 file bersamaan
             foreach (array_chunk($uploadTasks, 3) as $batch) {
                 foreach ($batch as $filePath) {
                     $uploadedFile = Cloudinary::upload($filePath, [
                         'folder' => 'sipadu/aduan/bukti',
                         'quality' => 'auto',
-                        'fetch_format' => 'auto'
+                        'fetch_format' => 'auto',
                     ]);
                     $fotoBuktiUrls[] = $uploadedFile->getSecurePath();
                 }
@@ -89,8 +89,6 @@ class AduanController extends Controller
             ->with('success', 'Aduan berhasil dikirim!');
     }
 
-    
-
     // ❌ Hapus aduan (oleh mahasiswa)
     public function destroy($id)
     {
@@ -98,6 +96,7 @@ class AduanController extends Controller
 
         if ($aduan && $aduan->id_mahasiswa == session('mahasiswa')->id) {
             DB::table('aduan')->where('id', $id)->delete();
+
             return back()->with('success', 'Aduan berhasil dihapus.');
         }
 
@@ -109,7 +108,7 @@ class AduanController extends Controller
     {
         // Ambil aduan publik (misal: semua aduan, atau filter tertentu jika ada kolom khusus)
         $aduan = DB::table('aduan')
-            ->select('id','judul', 'kategori', 'status', 'nomor_tiket', 'created_at')
+            ->select('id', 'judul', 'kategori', 'status', 'nomor_tiket', 'created_at')
             ->orderByDesc('created_at')
             ->get();
 
@@ -120,11 +119,11 @@ class AduanController extends Controller
     public function publicDetail($id)
     {
         $aduan = DB::table('aduan')
-            ->select('id','judul','kategori','status','nomor_tiket','created_at','deskripsi','foto_ktm','foto_bukti','foto_url','id_mahasiswa','status_validasi','catatan_admin')
+            ->select('id', 'judul', 'kategori', 'status', 'nomor_tiket', 'created_at', 'deskripsi', 'foto_ktm', 'foto_bukti', 'foto_url', 'id_mahasiswa', 'status_validasi', 'catatan_admin')
             ->where('id', $id)
             ->first();
 
-        if (!$aduan) {
+        if (! $aduan) {
             return back()->with('error', 'Aduan tidak ditemukan.');
         }
 
@@ -138,7 +137,7 @@ class AduanController extends Controller
 
         // Tentukan user type
         $userType = 'public'; // Default publik (tidak login)
-        
+
         if (session('mahasiswa')) {
             // Cek apakah ini pemilik aduan
             if (session('mahasiswa')->id == $aduan->id_mahasiswa) {

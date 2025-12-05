@@ -3,20 +3,23 @@
 @section('title', 'SIPADU - Edit Catatan Penyelesaian')
 
 @section('content')
-<div class="container my-5">
-    <div class="text-center mb-4">
-        <img src="https://cdn-icons-png.flaticon.com/512/2921/2921222.png"
-             alt="Edit Catatan" class="img-fluid mb-3" style="max-height: 110px;">
-        <h2 class="fw-bold text-success mb-1">
-            <i class="bi bi-pencil-square me-2"></i>Edit Catatan Penyelesaian
-        </h2>
-        <p class="text-muted">Catat ringkasan hasil penyelesaian aduan Anda.</p>
-    </div>
 
-    <div class="card shadow-lg border-0 mx-auto" style="max-width: 700px;">
-        <div class="card-header bg-success text-white text-center fw-semibold">
-            <i class="bi bi-check-circle-fill me-2"></i>Catatan Penyelesaian
+<!-- Hero Header -->
+<section class="detail-hero position-relative text-dark mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="text-center">
+            <div class="hero-icon mx-auto mb-3" style="width: auto; padding: 20px;">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h1 class="fw-bold mb-2">Edit Catatan Penyelesaian</h1>
+            <p class="opacity-90">Catat ringkasan hasil penyelesaian aduan Anda.</p>
         </div>
+    </div>
+</section>
+
+<div class="container mb-5">
+    <div class="card shadow-lg border-0 mx-auto" style="max-width: 700px;">
         <div class="card-body p-4">
             {{-- Info Aduan --}}
             <div class="mb-4 border-start border-4 border-success ps-3">
@@ -78,17 +81,70 @@
 </div>
 
 <style>
-.card:hover {
-    transform: translateY(-4px);
-    transition: 0.3s ease;
-    box-shadow: 0 8px 20px rgba(0, 128, 0, 0.3);
-}
-.form-control:focus {
-    border-color: #28a745;
-    box-shadow: 0 0 0 0.25rem rgba(40, 167, 69, 0.3);
-}
-.alert-danger {
-    border-left: 4px solid #dc3545;
-}
+    /* Hero Section - Changed from red to yellow but kept check-circle green for finalization */
+    .detail-hero {
+        background: linear-gradient(135deg, #ffca2c 0%, #ffc107 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .detail-hero::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(20px); }
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.05);
+        z-index: 1;
+    }
+
+    .detail-hero .container {
+        z-index: 2;
+    }
+
+    .hero-icon {
+        width: 70px;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        transition: 0.3s ease;
+        box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
+    }
+
+    .form-control:focus {
+        border-color: #ffc107;
+        box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.3);
+    }
+
+    .alert-danger {
+        border-left: 4px solid #dc3545;
+    }
 </style>
+
 @endsection

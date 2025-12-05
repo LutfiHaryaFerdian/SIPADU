@@ -1,18 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MultiAuthController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\PicController;
 use App\Http\Controllers\AduanController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\Auth\GoogleController;
-
+use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\MahasiswaProfileController;
+use App\Http\Controllers\MultiAuthController;
+use App\Http\Controllers\PicController;
+use App\Http\Controllers\RegisterController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::middleware(['auth:mahasiswa'])->group(function () {});
 
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.redirect');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
@@ -28,7 +30,6 @@ Route::post('/forgot-password/verify', [ForgotPasswordController::class, 'verify
 
 Route::get('/forgot-password/reset', [ForgotPasswordController::class, 'showResetForm'])->name('forgot.resetForm');
 Route::post('/forgot-password/reset', [ForgotPasswordController::class, 'resetPassword'])->name('forgot.resetPassword');
-
 
 Route::get('/register', [RegisterController::class, 'showForm'])->name('register.form');
 Route::post('/register/send-otp', [RegisterController::class, 'sendOtp'])->name('register.sendOtp');
@@ -52,6 +53,20 @@ Route::middleware('admin')->group(function () {
     // Dashboard Admin
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
+    Route::get('/admin/mahasiswa', [AdminController::class, 'indexMahasiswa'])
+        ->name('admin.mahasiswa.index');
+    Route::get('/admin/mahasiswa/{id}', [AdminController::class, 'detailMahasiswa'])
+        ->name('admin.mahasiswa.detail');
+
+    Route::get('/admin/mahasiswa/{id}/edit', [AdminController::class, 'editMahasiswa'])
+        ->name('admin.mahasiswa.edit');
+
+    Route::delete('/admin/mahasiswa/{id}', [AdminController::class, 'deleteMahasiswa'])
+        ->name('admin.mahasiswa.delete');
+
+    Route::put('/admin/mahasiswa/{id}', [AdminController::class, 'updateMahasiswa'])
+        ->name('admin.mahasiswa.update');
+
     // Manajemen Aduan
     Route::get('/admin/aduan', [AdminController::class, 'indexAduan'])->name('admin.aduan.index');
     Route::get('/admin/aduan/{id}/detail', [AdminController::class, 'detailAduan'])->name('admin.aduan.detail');
@@ -66,7 +81,7 @@ Route::middleware('admin')->group(function () {
 // ===================================================
 Route::middleware('mahasiswa')->group(function () {
     // Dashboard Mahasiswa
-    Route::get('/mahasiswa/dashboard', fn() => view('dashboard.mahasiswa'))->name('mahasiswa.dashboard');
+    Route::get('/mahasiswa/dashboard', fn () => view('dashboard.mahasiswa'))->name('mahasiswa.dashboard');
 
     // CRUD Aduan Mahasiswa
     Route::get('/mahasiswa/aduan', [AduanController::class, 'index'])->name('aduan.index');
@@ -75,6 +90,10 @@ Route::middleware('mahasiswa')->group(function () {
     // Lihat Aduan Publik (tanpa identitas)
     Route::get('/mahasiswa/aduan-publik', [AduanController::class, 'publik'])->name('aduan.publik');
     Route::delete('/mahasiswa/aduan/{id}', [AduanController::class, 'destroy'])->name('aduan.destroy');
+
+    Route::get('/aduan/profile', [MahasiswaProfileController::class, 'show'])->name('mahasiswa.profile');
+    Route::post('/aduan/profile', [MahasiswaProfileController::class, 'update'])->name('mahasiswa.profile.update');
+
 });
 
 // ===================================================
