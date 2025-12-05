@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Aduan;
 
 class DashboardController extends Controller
@@ -10,13 +9,14 @@ class DashboardController extends Controller
     public function admin()
     {
         $aduan = \App\Models\Aduan::all();
+
         return view('dashboard.admin', compact('aduan'));
     }
 
     public function mahasiswa()
     {
         // Pastikan user login
-        if (!session()->has('data')) {
+        if (! session()->has('data')) {
             return redirect('/login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
