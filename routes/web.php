@@ -53,6 +53,20 @@ Route::middleware('admin')->group(function () {
     // Dashboard Admin
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
+    Route::get('/admin/mahasiswa', [AdminController::class, 'indexMahasiswa'])
+        ->name('admin.mahasiswa.index');
+    Route::get('/admin/mahasiswa/{id}', [AdminController::class, 'detailMahasiswa'])
+        ->name('admin.mahasiswa.detail');
+
+    Route::get('/admin/mahasiswa/{id}/edit', [AdminController::class, 'editMahasiswa'])
+        ->name('admin.mahasiswa.edit');
+
+    Route::delete('/admin/mahasiswa/{id}', [AdminController::class, 'deleteMahasiswa'])
+        ->name('admin.mahasiswa.delete');
+
+    Route::put('/admin/mahasiswa/{id}', [AdminController::class, 'updateMahasiswa'])
+        ->name('admin.mahasiswa.update');
+
     // Manajemen Aduan
     Route::get('/admin/aduan', [AdminController::class, 'indexAduan'])->name('admin.aduan.index');
     Route::get('/admin/aduan/{id}/detail', [AdminController::class, 'detailAduan'])->name('admin.aduan.detail');

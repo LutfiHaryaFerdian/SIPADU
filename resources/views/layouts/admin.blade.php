@@ -24,6 +24,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="/admin/mahasiswa" class="nav-link {{ request()->is('admin/mahasiswa*') ? 'active' : '' }}">
+                        <i class="bi bi-people-fill me-1"></i>Mahasiswa
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="/logout/admin" class="nav-link text-light fw-semibold bg-danger bg-opacity-25 px-3 rounded-3">
                         <i class="bi bi-box-arrow-right me-1"></i>Logout
                     </a>
@@ -32,4 +37,26 @@
         </div>
     </div>
 </nav>
+@endsection
+
+@section('content')
+<div class="container-fluid mt-5 pt-4">
+    {{-- Alerts --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+
+    {{-- Konten halaman --}}
+    @yield('content')
+</div>
 @endsection
