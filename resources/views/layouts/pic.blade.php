@@ -1,44 +1,47 @@
 @extends('layouts.app')
 
 @section('navbar')
-<nav class="navbar navbar-expand-lg navbar-dark shadow-sm fixed-top" style="background: linear-gradient(90deg, #ffca2c, #ffc107);">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top modern-navbar-pic">
     <div class="container-fluid px-4">
-        <!-- 🔸 Logo -->
-        <a class="navbar-brand fw-semibold text-dark d-flex align-items-center" href="/pic/dashboard">
-            <i class="bi bi-building-gear me-2"></i>
-            <span>SIPADU - PIC Unit</span>
+        <!-- Updated brand styling to match mahasiswa layout with icon background -->
+        <a class="navbar-brand d-flex align-items-center" href="/pic/dashboard">
+            <div class="brand-icon me-2">
+                <i class="bi bi-building-gear"></i>
+            </div>
+            <span class="brand-text">SIPADU - PIC Unit</span>
         </a>
 
-        <!-- Toggle Button (Mobile) -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPic"
+        <!-- Added border-0 class to toggler to match mahasiswa styling -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPic"
             aria-controls="navbarPic" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- 🔸 Navbar Menu -->
-        <div class="collapse navbar-collapse" id="navbarPic">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-
-                <!-- Dashboard -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarPic">
+            <ul class="navbar-nav align-items-lg-center gap-1">
+                <!-- Updated Dashboard link styling to match mahasiswa nav-link pattern -->
                 <li class="nav-item">
                     <a href="/pic/dashboard" 
-                       class="nav-link {{ Request::is('pic/dashboard') ? 'active fw-bold text-dark' : 'text-dark' }}">
-                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                       class="nav-link modern-nav-link {{ Request::is('pic/dashboard') ? 'active' : '' }}">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        <span>Dashboard</span>
                     </a>
                 </li>
 
-                <!-- Aduan Ditugaskan -->
+                <!-- Updated Aduan Ditugaskan link styling to match mahasiswa nav-link pattern -->
                 <li class="nav-item">
                     <a href="/pic/aduan" 
-                       class="nav-link {{ Request::is('pic/aduan*') ? 'active fw-bold text-dark' : 'text-dark' }}">
-                        <i class="bi bi-list-task me-1"></i>Aduan Ditugaskan
+                       class="nav-link modern-nav-link {{ Request::is('pic/aduan*') ? 'active' : '' }}">
+                        <i class="bi bi-list-task me-2"></i>
+                        <span>Aduan Ditugaskan</span>
                     </a>
                 </li>
 
-                <!-- Logout -->
-                <li class="nav-item">
-                    <a href="/logout/pic" class="nav-link text-light fw-semibold bg-danger bg-opacity-25 px-3 rounded-3">
-                        <i class="bi bi-box-arrow-right me-1"></i>Logout
+                <!-- Updated logout button styling to match mahasiswa logout-btn pattern -->
+                <li class="nav-item ms-lg-2">
+                    <a href="/logout/pic" class="nav-link logout-btn">
+                        <i class="bi bi-box-arrow-right me-2"></i>
+                        <span>Logout</span>
                     </a>
                 </li>
             </ul>
@@ -47,18 +50,115 @@
 </nav>
 
 <style>
-.nav-link.active {
-    background-color: rgba(255, 255, 255, 0.4);
-    border-radius: 0.5rem;
-}
-.nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-    border-radius: 0.5rem;
-    transition: 0.3s;
-}
-.navbar-brand:hover {
-    opacity: 0.85;
-    transition: 0.3s ease;
-}
+    .modern-navbar-pic {
+        background: linear-gradient(to right, #d97706, #fbbf24);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 0.8rem 0;
+    }
+
+    .navbar-brand {
+        font-weight: 600;
+        font-size: 1.2rem;
+    }
+
+    .brand-icon {
+        width: 38px;
+        height: 38px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .navbar-brand:hover .brand-icon {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .brand-text {
+        color: white;
+    }
+
+    .modern-nav-link {
+        color: rgba(255, 255, 255, 0.85) !important;
+        padding: 0.5rem 1rem !important;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
+    .modern-nav-link i {
+        font-size: 1rem;
+    }
+
+    .modern-nav-link:hover {
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .modern-nav-link.active {
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.2);
+        font-weight: 600;
+    }
+
+    .logout-btn {
+        background: rgba(239, 68, 68, 0.15) !important;
+        color: #fff !important;
+        padding: 0.5rem 1.2rem !important;
+        border-radius: 8px;
+        font-weight: 600;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .logout-btn:hover {
+        background: #dc2626 !important;
+        border-color: #dc2626;
+    }
+
+    .navbar-toggler {
+        padding: 0.4rem;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar-toggler:focus {
+        box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.2);
+    }
+
+    @media (max-width: 991.98px) {
+        .modern-navbar-pic {
+            padding: 0.6rem 0;
+        }
+
+        .navbar-collapse {
+            margin-top: 0.8rem;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+        }
+
+        .modern-nav-link {
+            margin: 0.2rem 0;
+        }
+
+        .logout-btn {
+            margin-top: 0.4rem;
+        }
+    }
+
+    body {
+        padding-top: 70px;
+    }
+
+    @media (max-width: 991.98px) {
+        body {
+            padding-top: 65px;
+        }
+    }
 </style>
 @endsection

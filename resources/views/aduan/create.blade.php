@@ -576,6 +576,71 @@
         color: #6c757d;
     }
 
+    .preview-item {
+        position: relative;
+        display: inline-block;
+        margin: 10px;
+        border-radius: 14px;
+        overflow: hidden;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        cursor: pointer;
+    }
+
+    .preview-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    .preview-item img {
+        width: 140px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 14px;
+        display: block;
+    }
+
+    /* Delete Button Modern */
+    .delete-btn {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 30px;
+        height: 30px;
+        border: none;
+        border-radius: 50%;
+
+        /* Glass effect */
+        backdrop-filter: blur(6px);
+        background: rgba(0, 0, 0, 0.45);
+
+        color: #fff;
+        font-size: 18px;
+        line-height: 30px;
+        text-align: center;
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        opacity: 0;
+        transform: scale(0.8);
+        transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    /* Button muncul hanya saat hover */
+    .preview-item:hover .delete-btn {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* Hover effect delete */
+    .delete-btn:hover {
+        background: rgba(255, 0, 0, 0.8);
+    }
+
+
+
     /* Responsive */
     @media (max-width: 768px) {
         .progress-steps {
@@ -606,5 +671,106 @@
         }
     }
 </style>
+
+<script>
+    /* ============================================================
+    PREVIEW + DELETE FOTO KTM (single)
+    ============================================================ */
+    document.getElementById('fotoKtm').addEventListener('change', function () {
+        const previewContainer = document.getElementById('previewKtm');
+        previewContainer.innerHTML = '';
+
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const imgDiv = document.createElement('div');
+            imgDiv.classList.add('preview-item');
+
+            imgDiv.innerHTML = `
+                <img src="${e.target.result}">
+                <div class="preview-label">${file.name}</div>
+                <button type="button" class="delete-btn">&times;</button>
+            `;
+
+            // tombol hapus KTM
+            imgDiv.querySelector('.delete-btn').onclick = function () {
+                document.getElementById('fotoKtm').value = "";
+                previewContainer.innerHTML = "";
+            };
+
+            previewContainer.appendChild(imgDiv);
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+
+    /* ============================================================
+    PREVIEW + DELETE FOTO BUKTI (multiple, max 5)
+    ============================================================ */
+    let fotoBuktiArray = [];
+
+    document.getElementById('fotoBukti').addEventListener('change', function () {
+        const max = 5;
+        const newFiles = Array.from(this.files);
+
+        if (fotoBuktiArray.length + newFiles.length > max) {
+            alert("Maksimal upload 5 foto");
+            this.value = "";
+            return;
+        }
+
+        fotoBuktiArray = fotoBuktiArray.concat(newFiles);
+        this.value = "";  // reset input
+
+        renderBukti();
+        syncBuktiInput();
+    });
+
+    function renderBukti() {
+        const preview = document.getElementById('previewBukti');
+        const count = document.getElementById('fotoBuktiCount');
+
+        preview.innerHTML = "";
+        count.textContent = `${fotoBuktiArray.length} foto terpilih`;
+
+        fotoBuktiArray.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const div = document.createElement('div');
+                div.classList.add('preview-item');
+
+                div.innerHTML = `
+                    <img src="${e.target.result}">
+                    <div class="preview-label">${file.name}</div>
+                    <button type="button" class="delete-btn">&times;</button>
+                `;
+
+                div.querySelector(".delete-btn").onclick = function () {
+                    fotoBuktiArray.splice(index, 1);
+                    renderBukti();
+                    syncBuktiInput();
+                };
+
+                preview.appendChild(div);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function syncBuktiInput() {
+        const input = document.getElementById('fotoBukti');
+        const dt = new DataTransfer();
+
+        fotoBuktiArray.forEach(file => dt.items.add(file));
+        input.files = dt.files; // wajib agar form bisa terkirim
+    }
+</script>
+
+
+
 
 @endsection

@@ -5,21 +5,43 @@
     use Illuminate\Support\Facades\DB;
     use Carbon\Carbon;
     $id_pic = session('pic')->id;
-    $totalTugas = DB::table('tindak_lanjut')->where('id_pic', $id_pic)->distinct('id_aduan')->count('id_aduan');
-    $aduanProses = DB::table('tindak_lanjut')
-        ->where('id_pic', $id_pic)
-        ->where('status', 'Sedang Dikerjakan')
-        ->distinct('id_aduan')
-        ->count('id_aduan');
-    $aduanSelesai = DB::table('tindak_lanjut')
-        ->where('id_pic', $id_pic)
-        ->where('status', 'Selesai')
-        ->distinct('id_aduan')
-        ->count('id_aduan');
+    
+    // Get all unique aduan IDs assigned to this PIC with their latest status
+    $aduanWithStatus = DB::table('tindak_lanjut as tl1')
+        ->select('tl1.id_aduan', 'tl1.status')
+        ->where('tl1.id_pic', $id_pic)
+        ->whereRaw('tl1.id = (
+            SELECT tl2.id 
+            FROM tindak_lanjut tl2 
+            WHERE tl2.id_aduan = tl1.id_aduan 
+            AND tl2.id_pic = ?
+            ORDER BY tl2.created_at DESC 
+            LIMIT 1
+        )', [$id_pic])
+        ->get();
+    
+    // Calculate statistics
+    $totalTugas = $aduanWithStatus->count();
+    $aduanProses = $aduanWithStatus->where('status', 'Sedang Dikerjakan')->count();
+    $aduanSelesai = $aduanWithStatus->where('status', 'Selesai')->count();
+    
+    // Get 5 most recent complaints with their latest status
     $aduanTerbaru = DB::table('aduan')
         ->join('tindak_lanjut', 'aduan.id', '=', 'tindak_lanjut.id_aduan')
         ->where('tindak_lanjut.id_pic', $id_pic)
-        ->select('aduan.*')
+        ->select(
+            'aduan.*',
+            DB::raw('(
+                SELECT status 
+                FROM tindak_lanjut 
+                WHERE id_aduan = aduan.id 
+                AND id_pic = ?
+                ORDER BY created_at DESC 
+                LIMIT 1
+            ) as status_terbaru')
+        )
+        ->addBinding($id_pic, 'select')
+        ->groupBy('aduan.id')
         ->orderBy('aduan.created_at', 'desc')
         ->limit(5)
         ->get();
@@ -42,9 +64,6 @@
                     <div class="hero-actions">
                         <a href="/pic/aduan" class="btn btn-hero btn-hero-primary">
                             <i class="bi bi-briefcase-fill me-2"></i>Kelola Tugas
-                        </a>
-                        <a href="/pic/laporan" class="btn btn-hero btn-hero-outline">
-                            <i class="bi bi-file-earmark-text me-2"></i>Laporan
                         </a>
                     </div>
                 </div>
@@ -122,9 +141,9 @@
     <div class="section-header mb-4">
         <h3 class="fw-bold mb-1">
             <i class="bi bi-clock-history text-warning me-2"></i>
-            Aduan Terbaru yang Ditugaskan
+            Aduan yang Sedang Dikerjakan
         </h3>
-        <p class="text-muted mb-0">5 aduan terbaru yang ditugaskan ke unit Anda</p>
+        <p class="text-muted mb-0">5 aduan yang sedang dikerjakan</p>
     </div>
 
     @if($aduanTerbaru->isEmpty())
@@ -151,17 +170,6 @@
                         </thead>
                         <tbody>
                             @foreach($aduanTerbaru as $a)
-                            @php
-                                $tindakLanjutTerbaru = DB::table('tindak_lanjut')
-                                    ->where('id_aduan', $a->id)
-                                    ->where('id_pic', $id_pic)
-                                    ->orderBy('created_at', 'desc')
-                                    ->first();
-                                $statusDisplay = $a->status;
-                                if ($tindakLanjutTerbaru) {
-                                    $statusDisplay = $tindakLanjutTerbaru->status;
-                                }
-                            @endphp
                             <tr>
                                 <td class="ps-4">
                                     <div class="aduan-info">
@@ -173,17 +181,20 @@
                                 </td>
                                 <td>{{ $a->kategori ?? 'N/A' }}</td>
                                 <td>
-                                    <span class="status-badge status-{{ strtolower(str_replace(' ', '-', $statusDisplay)) }}">
-                                        @if($statusDisplay == 'Menunggu')
+                                    <span class="status-badge status-{{ strtolower(str_replace(' ', '-', $a->status_terbaru ?? $a->status)) }}">
+                                        @php
+                                            $displayStatus = $a->status_terbaru ?? $a->status;
+                                        @endphp
+                                        @if($displayStatus == 'Menunggu')
                                             <i class="bi bi-clock-history me-1"></i>
-                                        @elseif($statusDisplay == 'Sedang Dikerjakan')
+                                        @elseif($displayStatus == 'Sedang Dikerjakan')
                                             <i class="bi bi-gear-fill me-1"></i>
-                                        @elseif($statusDisplay == 'Selesai')
+                                        @elseif($displayStatus == 'Selesai')
                                             <i class="bi bi-check-circle-fill me-1"></i>
-                                        @elseif($statusDisplay == 'Ditolak')
+                                        @elseif($displayStatus == 'Ditolak')
                                             <i class="bi bi-x-circle-fill me-1"></i>
                                         @endif
-                                        {{ $statusDisplay }}
+                                        {{ $displayStatus }}
                                     </span>
                                 </td>
                                 <td>
@@ -193,7 +204,7 @@
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <a href="/pic/aduan/{{ $a->id }}" 
+                                    <a href="{{ route('pic.tindaklanjut.view', $a->id) }}" 
                                        class="btn btn-sm btn-warning text-dark"
                                        data-bs-toggle="tooltip"
                                        title="Lihat Detail">

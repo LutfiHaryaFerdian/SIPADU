@@ -252,31 +252,36 @@
 
                                     <!-- Aksi -->
                                     <td class="text-center">
-                                        <div class="btn-group">
-                                            <a href="{{ route('aduan.publik.detail', $a->id) }}" 
-                                               class="btn btn-sm btn-primary"
-                                               data-bs-toggle="tooltip"
-                                               title="Lihat Detail">
+                                        <div class="d-flex gap-2 justify-content-center">
+
+                                            <!-- Tombol Lihat -->
+                                            <a href="{{ route('aduan.publik.detail', $a->id) }}"
+                                            class="btn btn-sm"
+                                            style="background:#007bff; color:white; border-radius:12px; width:40px; height:40px; display:flex; align-items:center; justify-content:center;"
+                                            data-bs-toggle="tooltip"
+                                            title="Lihat Detail">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <button type="button"
-                                                    class="btn btn-sm btn-danger"
-                                                    data-bs-toggle="tooltip"
-                                                    title="Hapus Aduan"
-                                                    onclick="confirmDelete({{ $a->id }})">
-                                                <i class="bi bi-trash3"></i>
-                                            </button>
-                                        </div>
 
-                                        <!-- Hidden Form for Delete -->
-                                        <form id="delete-form-{{ $a->id }}" 
-                                              action="{{ route('aduan.destroy', $a->id) }}" 
-                                              method="POST" 
-                                              class="d-none">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
+                                            <!-- Tombol Hapus -->
+                                            <form action="{{ route('aduan.destroy', $a->id) }}"
+                                                method="POST"
+                                                onsubmit="return confirm('Yakin ingin menghapus aduan ini?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="btn btn-sm"
+                                                        style="background:#dc3545; color:white; border-radius:12px; width:40px; height:40px; display:flex; align-items:center; justify-content:center;"
+                                                        data-bs-toggle="tooltip"
+                                                        title="Hapus Aduan">
+                                                    <i class="bi bi-trash3"></i>
+                                                </button>
+                                            </form>
+
+                                        </div>
                                     </td>
+
+
                                 </tr>
                             @endforeach
                         </tbody>
@@ -661,7 +666,63 @@
 </style>
 
 <script>
-    // ... existing search and filter functionality ...
+    // Search Functionality
+    document.getElementById('searchInput')?.addEventListener('keyup', filterTable);
+    document.getElementById('filterStatus')?.addEventListener('change', filterTable);
+    document.getElementById('filterValidasi')?.addEventListener('change', filterTable);
+
+    function filterTable() {
+        const searchValue = document.getElementById('searchInput')?.value.toLowerCase() || '';
+        const statusFilter = document.getElementById('filterStatus')?.value || '';
+        const validasiFilter = document.getElementById('filterValidasi')?.value || '';
+        
+        const rows = document.querySelectorAll('.aduan-row');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const searchText = row.getAttribute('data-search');
+            const status = row.getAttribute('data-status');
+            const validasi = row.getAttribute('data-validasi');
+
+            const matchSearch = searchText.includes(searchValue);
+            const matchStatus = !statusFilter || status === statusFilter;
+            const matchValidasi = !validasiFilter || validasi === validasiFilter;
+
+            if (matchSearch && matchStatus && matchValidasi) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Show/hide no results message
+        const noResults = document.getElementById('noResults');
+        const table = document.getElementById('aduanTable');
+        
+        if (visibleCount === 0) {
+            table?.classList.add('d-none');
+            noResults?.classList.remove('d-none');
+        } else {
+            table?.classList.remove('d-none');
+            noResults?.classList.add('d-none');
+        }
+    }
+
+    // Delete Confirmation
+    function confirmDelete(id) {
+        if (confirm('Apakah Anda yakin ingin menghapus aduan ini? Tindakan ini tidak dapat dibatalkan.')) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    }
+
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
 </script>
 
 @endsection
