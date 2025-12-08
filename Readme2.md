@@ -26,12 +26,12 @@ Aplikasi ini dilengkapi dengan:
 
 ## Tim Pengembang
 
-| Nama | NPM | Peran |
-|------|------|-------|
-| Oryza Surya Hapsari | 2317051107 | Backend Developer |
-| Lutfi Harya Ferdian | 2317051096 | Fullstack Developer |
-| Indriazan Alkautsar | 2357051074 | UI/UX & Frontend Developer |
-| Afgan Candra Putra Nuraya | 2317051068 | Backend Developer |
+| Nama | NPM |
+|------|------|
+| Oryza Surya Hapsari | 2317051107 |
+| Lutfi Harya Ferdian | 2317051096 |
+| Indriazan Alkautsar | 2357051074 |
+| Afgan Candra Putra Nuraya | 2317051068 |
 
 ### Dosen Pengampu
 - M. Iqbal Parabi, S.Si., M.T.  
@@ -126,9 +126,3 @@ Admin dapat:
 
 ---
 
-## Instalasi & Konfigurasi
-
-### **1. Clone Repository**
-```bash
-git clone https://github.com/LutfiHaryaFerdian/SIPADU
-cd SIPADU
