@@ -105,5 +105,24 @@ Admin dapat:
 ---
 
 
+## Teknologi yang Digunakan
 
+### *Backend*
+- Laravel 10  
+- PHP 8.1  
+- PostgreSQL  
+- Cloudinary API  
+- Laravel Mail SMTP  
+
+### *Frontend*
+- Blade Template  
+- Bootstrap 5  
+- JavaScript Vanilla  
+
+### *Pendukung*
+- Eloquent ORM  
+- Laravel Middleware  
+- Skema MVC  
+
+---
 
