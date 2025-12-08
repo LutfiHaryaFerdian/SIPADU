@@ -69,11 +69,7 @@
                 </div>
             </div>
             <div class="col-lg-4 d-none d-lg-block">
-                <div class="hero-illustration">
-                    <div class="illustration-circle circle-1"></div>
-                    <div class="illustration-circle circle-2"></div>
-                    <div class="illustration-circle circle-3"></div>
-                </div>
+    
             </div>
         </div>
     </div>
