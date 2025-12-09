@@ -5,6 +5,9 @@
 
 @section('content')
 
+<!-- Admin CSS -->
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+
 <!-- Hero Header -->
 <section class="detail-hero position-relative text-white mb-5">
     <div class="hero-overlay"></div>
@@ -147,105 +150,6 @@
     </div>
 </div>
 
-<style>
-    /* Hero Section */
-    /* Blue theme for mahasiswa detail layout */
-    .detail-hero {
-        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-        position: relative;
-        overflow: hidden;
-    }
 
-    .detail-hero::before {
-        content: '';
-        position: absolute;
-        top: -30%;
-        right: -10%;
-        width: 500px;
-        height: 500px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.1);
-        z-index: 1;
-    }
-
-    .detail-hero .container {
-        z-index: 2;
-    }
-
-    .hero-icon {
-        width: 70px;
-        height: 70px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-    }
-
-    /* Card */
-    .card {
-        border-radius: 16px;
-        overflow: hidden;
-    }
-
-    /* Photo Card */
-    .photo-card {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .photo-img {
-        width: 100%;
-        height: auto;
-        max-height: 400px;
-        object-fit: cover;
-        display: block;
-    }
-
-    /* Info Item */
-    .info-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 16px;
-        padding: 16px 0;
-        border-bottom: 1px solid #e9ecef;
-    }
-
-    .info-item:last-child {
-        border-bottom: none;
-    }
-
-    .info-icon {
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.25rem;
-        flex-shrink: 0;
-    }
-
-    .info-content {
-        flex: 1;
-    }
-
-    .info-content strong {
-        color: #212529;
-    }
-</style>
 
 @endsection

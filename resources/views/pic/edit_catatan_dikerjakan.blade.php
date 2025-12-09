@@ -4,6 +4,9 @@
 
 @section('content')
 
+<!-- PIC CSS -->
+    <link rel="stylesheet" href="{{ asset('css/pic.css') }}">
+
 <!-- Hero Header -->
 <section class="detail-hero position-relative text-dark mb-5">
     <div class="hero-overlay"></div>
@@ -57,68 +60,5 @@
         </div>
     </div>
 </div>
-
-<style>
-    /* Hero Section - Changed from red to yellow */
-    .detail-hero {
-        background: linear-gradient(135deg, #ffca2c 0%, #ffc107 100%);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .detail-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 500px;
-        height: 500px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        animation: float 6s ease-in-out infinite;
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(20px); }
-    }
-
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.05);
-        z-index: 1;
-    }
-
-    .detail-hero .container {
-        z-index: 2;
-    }
-
-    .hero-icon {
-        width: 70px;
-        height: 70px;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: white;
-    }
-
-    .card:hover {
-        transform: translateY(-4px);
-        transition: 0.3s ease;
-        box-shadow: 0 8px 20px rgba(255, 193, 7, 0.3);
-    }
-
-    .form-control:focus {
-        border-color: #ffc107;
-        box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.3);
-    }
-</style>
 
 @endsection

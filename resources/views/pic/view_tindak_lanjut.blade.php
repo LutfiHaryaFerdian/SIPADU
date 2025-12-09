@@ -4,6 +4,9 @@
 
 @section('content')
 
+<!-- PIC CSS -->
+    <link rel="stylesheet" href="{{ asset('css/pic.css') }}">
+
 <!-- Hero Header -->
 <section class="detail-hero position-relative text-dark mb-5">
     <div class="hero-overlay"></div>
@@ -172,114 +175,5 @@
         </div>
     </div>
 </div>
-
-<style>
-    /* Hero Section - Changed from red to yellow */
-    .detail-hero {
-        background: linear-gradient(135deg, #ffca2c 0%, #ffc107 100%);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .detail-hero::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 500px;
-        height: 500px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-        animation: float 6s ease-in-out infinite;
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(20px); }
-    }
-
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.05);
-        z-index: 1;
-    }
-
-    .detail-hero .container {
-        z-index: 2;
-    }
-
-    .hero-icon {
-        width: 70px;
-        height: 70px;
-        background: rgba(255, 255, 255, 0.3);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        color: white;
-    }
-
-    /* Card */
-    .card {
-        border-radius: 16px;
-        overflow: hidden;
-    }
-
-    /* Category Icon */
-    .category-icon-inline {
-        display: inline-flex;
-        align-items: center;
-        background: linear-gradient(135deg, #ffca2c 0%, #ffc107 100%);
-        color: #212529;
-        padding: 8px 16px;
-        border-radius: 12px;
-        font-weight: 600;
-    }
-
-    /* Description Box */
-    .description-box {
-        background: #f8f9fa;
-        border-left: 4px solid #ffc107;
-        padding: 20px;
-        border-radius: 12px;
-        line-height: 1.8;
-        color: #495057;
-    }
-
-    /* Note Box */
-    .note-box {
-        background: #f8f9fa;
-        border-radius: 12px;
-        padding: 16px;
-        border-left: 4px solid #ffc107;
-    }
-
-    /* Photo Card */
-    .photo-card {
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    .photo-img {
-        width: 100%;
-        height: auto;
-        max-height: 400px;
-        object-fit: cover;
-        display: block;
-    }
-
-    .photo-footer {
-        background: #f8f9fa;
-        padding: 12px 16px;
-        text-align: center;
-        border-top: 1px solid #e9ecef;
-    }
-</style>
 
 @endsection

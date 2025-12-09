@@ -5,6 +5,9 @@
 
 @section('content')
 
+<!-- Admin CSS -->
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+
 <!-- Hero Header -->
 <section class="mahasiswa-hero position-relative text-white mb-5">
     <div class="hero-overlay"></div>
@@ -163,139 +166,7 @@
     @endif
 </div>
 
-<style>
-    /* Hero Section */
-    /* Blue theme for mahasiswa layout */
-    .mahasiswa-hero {
-        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-        position: relative;
-        overflow: hidden;
-    }
 
-    .mahasiswa-hero::before {
-        content: '';
-        position: absolute;
-        top: -30%;
-        right: -10%;
-        width: 500px;
-        height: 500px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 50%;
-    }
-
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.1);
-        z-index: 1;
-    }
-
-    .mahasiswa-hero .container {
-        z-index: 2;
-    }
-
-    .hero-icon {
-        width: 70px;
-        height: 70px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-    }
-
-    /* Card */
-    .card {
-        border-radius: 16px;
-        overflow: hidden;
-    }
-
-    /* Form Controls */
-    .form-control, .form-select {
-        border: 2px solid #e9ecef;
-        border-radius: 12px;
-        transition: all 0.3s ease;
-    }
-
-    /* Blue focus color for forms */
-    .form-control:focus, .form-select:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
-    }
-
-    .input-group-text {
-        border: 2px solid #e9ecef;
-        border-radius: 12px 0 0 12px;
-    }
-
-    /* Table */
-    /* Blue gradient for table header */
-    thead {
-        background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
-        color: white;
-    }
-
-    thead th {
-        border: none;
-        padding: 18px 16px;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
-    }
-
-    tbody td {
-        padding: 20px 16px;
-        border-bottom: 1px solid #f1f3f5;
-        vertical-align: middle;
-    }
-
-    tbody tr {
-        transition: all 0.3s ease;
-    }
-
-    tbody tr:hover {
-        background: #f8f9fa;
-        transform: scale(1.01);
-    }
-
-    /* Mahasiswa Info */
-    .mahasiswa-info h6 {
-        font-size: 1rem;
-        margin-bottom: 6px;
-        color: #212529;
-    }
-
-    .mahasiswa-info small {
-        font-size: 0.85rem;
-    }
-
-    /* Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 60px 20px;
-        background: #f8f9fa;
-        border-radius: 16px;
-    }
-
-    .empty-icon {
-        font-size: 4rem;
-        color: #0d6efd;
-        margin-bottom: 20px;
-    }
-
-    .empty-state h5 {
-        margin-bottom: 8px;
-    }
-
-    .empty-state p {
-        margin: 0;
-    }
-</style>
 
 <!-- Filter & Search JS -->
 <script>
